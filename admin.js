@@ -1,160 +1,45 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  const supabase = window.supabaseClient;
-
-  if (!supabase) {
-    showLoginMessage("ไม่พบการเชื่อมต่อ Supabase");
-    return;
-  }
-
-  await checkAdmin();
-});
+document.addEventListener(
+  "DOMContentLoaded",
+  initAdmin
+);
 
 
-/* =========================
-   CHECK ADMIN
-========================= */
-
-async function checkAdmin() {
-
-  const supabase = window.supabaseClient;
-
-  const {
-    data: { user },
-    error
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    showLoginPage();
-    return;
-  }
-
-  const {
-    data: admin
-  } = await supabase
-    .from("admins")
-    .select("user_id,email")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (!admin) {
-
-    await supabase.auth.signOut();
-
-    showLoginPage();
-
-    return;
-  }
-
-  showAdminPage(user);
-}
-
-
-/* =========================
-   LOGIN
-========================= */
-
-function showLoginPage() {
-
-  document
-    .getElementById("loginPage")
-    ?.classList.remove("hidden");
-
-  document
-    .getElementById("adminPage")
-    ?.classList.add("hidden");
-
-  const button =
-    document.getElementById("loginButton");
-
-  if (button) {
-    button.onclick = loginAdmin;
-  }
-}
-
-
-async function loginAdmin() {
+async function initAdmin() {
 
   const supabase =
     window.supabaseClient;
 
-  const email =
-    document
-      .getElementById("adminEmail")
-      .value
-      .trim();
+  if (!supabase) {
 
-  const password =
-    document
-      .getElementById("adminPassword")
-      .value;
-
-  const message =
-    document.getElementById("loginMessage");
-
-  if (!email || !password) {
-
-    message.textContent =
-      "กรุณากรอกอีเมลและรหัสผ่าน";
+    showLoginMessage(
+      "ไม่พบการเชื่อมต่อ Supabase"
+    );
 
     return;
   }
 
-  message.textContent =
-    "กำลังเข้าสู่ระบบ...";
 
-  const { error } =
-    await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+  setupButtons();
 
-  if (error) {
+  await checkAdmin();
 
-    message.textContent =
-      "เข้าสู่ระบบไม่สำเร็จ: " +
-      error.message;
-
-    return;
-  }
-
-  location.reload();
 }
 
-
-function showLoginMessage(message) {
-
-  const element =
-    document.getElementById("loginMessage");
-
-  if (element) {
-    element.textContent = message;
-  }
-}
 
 
 /* =========================
-   ADMIN
+   BUTTONS
 ========================= */
 
-function showAdminPage(user) {
+function setupButtons() {
 
   document
-    .getElementById("loginPage")
-    ?.classList.add("hidden");
+    .getElementById("loginButton")
+    ?.addEventListener(
+      "click",
+      loginAdmin
+    );
 
-  document
-    .getElementById("adminPage")
-    ?.classList.remove("hidden");
-
-  const status =
-    document.getElementById("adminStatus");
-
-  if (status) {
-
-    status.textContent =
-      "เข้าสู่ระบบแล้ว: " +
-      user.email;
-  }
 
   document
     .getElementById("logoutButton")
@@ -163,6 +48,7 @@ function showAdminPage(user) {
       logoutAdmin
     );
 
+
   document
     .getElementById("addGameButton")
     ?.addEventListener(
@@ -170,19 +56,6 @@ function showAdminPage(user) {
       openNewGame
     );
 
-  document
-    .getElementById("saveGameButton")
-    ?.addEventListener(
-      "click",
-      saveGame
-    );
-
-  document
-    .getElementById("cancelGameButton")
-    ?.addEventListener(
-      "click",
-      closeGameModal
-    );
 
   document
     .getElementById("closeGameModal")
@@ -191,6 +64,23 @@ function showAdminPage(user) {
       closeGameModal
     );
 
+
+  document
+    .getElementById("cancelGameButton")
+    ?.addEventListener(
+      "click",
+      closeGameModal
+    );
+
+
+  document
+    .getElementById("saveGameButton")
+    ?.addEventListener(
+      "click",
+      saveGame
+    );
+
+
   document
     .getElementById("addProductButton")
     ?.addEventListener(
@@ -198,19 +88,6 @@ function showAdminPage(user) {
       openNewProduct
     );
 
-  document
-    .getElementById("saveProductButton")
-    ?.addEventListener(
-      "click",
-      saveProduct
-    );
-
-  document
-    .getElementById("cancelProductButton")
-    ?.addEventListener(
-      "click",
-      closeProductModal
-    );
 
   document
     .getElementById("closeProductModal")
@@ -219,6 +96,23 @@ function showAdminPage(user) {
       closeProductModal
     );
 
+
+  document
+    .getElementById("cancelProductButton")
+    ?.addEventListener(
+      "click",
+      closeProductModal
+    );
+
+
+  document
+    .getElementById("saveProductButton")
+    ?.addEventListener(
+      "click",
+      saveProduct
+    );
+
+
   document
     .getElementById("productImage")
     ?.addEventListener(
@@ -226,22 +120,267 @@ function showAdminPage(user) {
       previewProductImage
     );
 
-  loadGames();
-  loadProductGames();
-  loadProducts();
+
+  document
+    .getElementById("gameIconUrl")
+    ?.addEventListener(
+      "input",
+      () =>
+        updateImagePreview(
+          "gameIconUrl",
+          "gameIconPreview"
+        )
+    );
+
+
+  document
+    .getElementById("gameBannerUrl")
+    ?.addEventListener(
+      "input",
+      () =>
+        updateImagePreview(
+          "gameBannerUrl",
+          "gameBannerPreview"
+        )
+    );
+
+
+  document
+    .getElementById("saveShopSettings")
+    ?.addEventListener(
+      "click",
+      saveShopSettings
+    );
+
 }
+
 
 
 /* =========================
-   LOGOUT
+   AUTH
 ========================= */
+
+async function checkAdmin() {
+
+  const supabase =
+    window.supabaseClient;
+
+
+  const {
+    data,
+    error
+  } =
+    await supabase.auth.getUser();
+
+
+  if (error) {
+
+    showLoginPage();
+
+    return;
+  }
+
+
+  const user = data.user;
+
+
+  if (!user) {
+
+    showLoginPage();
+
+    return;
+  }
+
+
+  const {
+    data: admin,
+    error: adminError
+  } =
+    await supabase
+      .from("admins")
+      .select("user_id,email")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+
+  if (
+    adminError ||
+    !admin
+  ) {
+
+    await supabase.auth.signOut();
+
+    showLoginMessage(
+      "บัญชีนี้ไม่มีสิทธิ์แอดมิน"
+    );
+
+    showLoginPage();
+
+    return;
+  }
+
+
+  showAdminPage(user);
+
+}
+
+
+
+function showLoginPage() {
+
+  document
+    .getElementById("loginPage")
+    ?.classList.remove(
+      "hidden"
+    );
+
+
+  document
+    .getElementById("adminPage")
+    ?.classList.add(
+      "hidden"
+    );
+
+}
+
+
+
+function showAdminPage(user) {
+
+  document
+    .getElementById("loginPage")
+    ?.classList.add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById("adminPage")
+    ?.classList.remove(
+      "hidden"
+    );
+
+
+  const status =
+    document.getElementById(
+      "adminStatus"
+    );
+
+
+  if (status) {
+
+    status.textContent =
+      "เข้าสู่ระบบแล้ว: " +
+      user.email;
+
+  }
+
+
+  loadGames();
+  loadProductGames();
+  loadProducts();
+
+}
+
+
+
+async function loginAdmin() {
+
+  const supabase =
+    window.supabaseClient;
+
+
+  const email =
+    document
+      .getElementById(
+        "adminEmail"
+      )
+      .value
+      .trim();
+
+
+  const password =
+    document
+      .getElementById(
+        "adminPassword"
+      )
+      .value;
+
+
+  if (
+    !email ||
+    !password
+  ) {
+
+    showLoginMessage(
+      "กรุณากรอกอีเมลและรหัสผ่าน"
+    );
+
+    return;
+  }
+
+
+  showLoginMessage(
+    "กำลังเข้าสู่ระบบ..."
+  );
+
+
+  const {
+    error
+  } =
+    await supabase.auth
+      .signInWithPassword({
+        email,
+        password
+      });
+
+
+  if (error) {
+
+    showLoginMessage(
+      "เข้าสู่ระบบไม่สำเร็จ: " +
+      error.message
+    );
+
+    return;
+  }
+
+
+  location.reload();
+
+}
+
+
+
+function showLoginMessage(message) {
+
+  const element =
+    document.getElementById(
+      "loginMessage"
+    );
+
+
+  if (element) {
+
+    element.textContent =
+      message;
+
+  }
+
+}
+
+
 
 async function logoutAdmin() {
 
-  await window.supabaseClient.auth.signOut();
+  await window.supabaseClient
+    .auth
+    .signOut();
 
   location.reload();
+
 }
+
 
 
 /* =========================
@@ -250,36 +389,49 @@ async function logoutAdmin() {
 
 async function loadGames() {
 
-  const supabase =
-    window.supabaseClient;
-
   const container =
-    document.getElementById("gamesList");
+    document.getElementById(
+      "gamesList"
+    );
+
 
   if (!container) return;
 
+
   container.innerHTML =
-    "<p>กำลังโหลดเกม...</p>";
+    `<p class="loading">
+      กำลังโหลดเกม...
+    </p>`;
+
 
   const {
     data,
     error
-  } = await supabase
-    .from("games")
-    .select("*")
-    .order("sort_order", {
-      ascending: true
-    });
+  } =
+    await window.supabaseClient
+      .from("games")
+      .select("*")
+      .order(
+        "sort_order",
+        {
+          ascending: true
+        }
+      );
+
 
   if (error) {
 
     container.innerHTML =
-      `<p style="color:#ff7777">
-        ${escapeHtml(error.message)}
+      `<p class="error">
+        โหลดเกมไม่สำเร็จ<br>
+        ${escapeHtml(
+          error.message
+        )}
       </p>`;
 
     return;
   }
+
 
   if (!data?.length) {
 
@@ -289,27 +441,48 @@ async function loadGames() {
     return;
   }
 
+
   container.innerHTML =
-    data.map(renderGame).join("");
+    data
+      .map(renderGame)
+      .join("");
+
 
   document
-    .querySelectorAll(".edit-game")
+    .querySelectorAll(
+      ".edit-game"
+    )
     .forEach(button => {
 
-      button.onclick = () =>
-        editGame(button.dataset.id);
+      button.addEventListener(
+        "click",
+        () =>
+          editGame(
+            button.dataset.id
+          )
+      );
 
     });
 
+
   document
-    .querySelectorAll(".delete-game")
+    .querySelectorAll(
+      ".delete-game"
+    )
     .forEach(button => {
 
-      button.onclick = () =>
-        deleteGame(button.dataset.id);
+      button.addEventListener(
+        "click",
+        () =>
+          deleteGame(
+            button.dataset.id
+          )
+      );
 
     });
+
 }
+
 
 
 function renderGame(game) {
@@ -318,7 +491,9 @@ function renderGame(game) {
     game.icon_url ||
     "https://placehold.co/100x100";
 
+
   return `
+
     <div class="game-card">
 
       <div class="game-head">
@@ -326,21 +501,30 @@ function renderGame(game) {
         <img
           class="game-icon"
           src="${escapeAttribute(icon)}"
+          alt=""
+          onerror="
+            this.src='https://placehold.co/100x100'
+          "
         >
 
         <div>
 
           <div class="game-name">
-            ${escapeHtml(game.name)}
+            ${escapeHtml(
+              game.name
+            )}
           </div>
 
           <div class="game-slug">
-            ${escapeHtml(game.slug)}
+            ${escapeHtml(
+              game.slug
+            )}
           </div>
 
         </div>
 
       </div>
+
 
       <span class="status ${
         game.is_active
@@ -356,6 +540,7 @@ function renderGame(game) {
 
       </span>
 
+
       <div class="game-description">
 
         ${
@@ -367,6 +552,7 @@ function renderGame(game) {
 
       </div>
 
+
       <div class="game-actions">
 
         <button
@@ -375,6 +561,7 @@ function renderGame(game) {
         >
           แก้ไข
         </button>
+
 
         <button
           class="btn btn-danger delete-game"
@@ -386,60 +573,95 @@ function renderGame(game) {
       </div>
 
     </div>
+
   `;
+
 }
+
 
 
 function openNewGame() {
 
   document.getElementById(
     "gameModalTitle"
-  ).textContent = "เพิ่มเกม";
+  ).textContent =
+    "เพิ่มเกม";
+
 
   document.getElementById(
     "gameId"
   ).value = "";
 
+
   document.getElementById(
     "gameName"
   ).value = "";
+
 
   document.getElementById(
     "gameSlug"
   ).value = "";
 
+
   document.getElementById(
     "gameDescription"
   ).value = "";
+
 
   document.getElementById(
     "gameIconUrl"
   ).value = "";
 
+
   document.getElementById(
     "gameBannerUrl"
   ).value = "";
+
 
   document.getElementById(
     "gameSortOrder"
   ).value = 0;
 
+
   document.getElementById(
     "gameActive"
   ).value = "true";
 
+
+  hidePreview(
+    "gameIconPreview"
+  );
+
+
+  hidePreview(
+    "gameBannerPreview"
+  );
+
+
   document
-    .getElementById("gameModal")
-    .classList.remove("hidden");
+    .getElementById(
+      "gameModal"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
 }
+
 
 
 function closeGameModal() {
 
   document
-    .getElementById("gameModal")
-    .classList.add("hidden");
+    .getElementById(
+      "gameModal"
+    )
+    .classList.add(
+      "hidden"
+    );
+
 }
+
 
 
 async function editGame(id) {
@@ -447,54 +669,74 @@ async function editGame(id) {
   const {
     data,
     error
-  } = await window.supabaseClient
-    .from("games")
-    .select("*")
-    .eq("id", id)
-    .single();
+  } =
+    await window.supabaseClient
+      .from("games")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-  if (error || !data) {
 
-    alert("ไม่พบข้อมูลเกม");
+  if (
+    error ||
+    !data
+  ) {
+
+    alert(
+      "ไม่พบข้อมูลเกม"
+    );
 
     return;
   }
 
+
   document.getElementById(
     "gameModalTitle"
-  ).textContent = "แก้ไขเกม";
+  ).textContent =
+    "แก้ไขเกม";
+
 
   document.getElementById(
     "gameId"
-  ).value = data.id;
+  ).value =
+    data.id;
+
 
   document.getElementById(
     "gameName"
-  ).value = data.name || "";
+  ).value =
+    data.name || "";
+
 
   document.getElementById(
     "gameSlug"
-  ).value = data.slug || "";
+  ).value =
+    data.slug || "";
+
 
   document.getElementById(
     "gameDescription"
   ).value =
     data.description || "";
 
+
   document.getElementById(
     "gameIconUrl"
   ).value =
     data.icon_url || "";
+
 
   document.getElementById(
     "gameBannerUrl"
   ).value =
     data.banner_url || "";
 
+
   document.getElementById(
     "gameSortOrder"
   ).value =
     data.sort_order || 0;
+
 
   document.getElementById(
     "gameActive"
@@ -503,62 +745,105 @@ async function editGame(id) {
       ? "true"
       : "false";
 
+
+  updateImagePreview(
+    "gameIconUrl",
+    "gameIconPreview"
+  );
+
+
+  updateImagePreview(
+    "gameBannerUrl",
+    "gameBannerPreview"
+  );
+
+
   document
-    .getElementById("gameModal")
-    .classList.remove("hidden");
+    .getElementById(
+      "gameModal"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
 }
+
 
 
 async function saveGame() {
 
   const id =
-    document.getElementById("gameId")
-      .value
-      .trim();
+    document.getElementById(
+      "gameId"
+    ).value.trim();
+
 
   const game = {
 
     name:
-      document.getElementById("gameName")
+      document
+        .getElementById(
+          "gameName"
+        )
         .value
         .trim(),
 
     slug:
-      document.getElementById("gameSlug")
+      document
+        .getElementById(
+          "gameSlug"
+        )
         .value
         .trim(),
 
     description:
-      document.getElementById("gameDescription")
+      document
+        .getElementById(
+          "gameDescription"
+        )
         .value
         .trim(),
 
     icon_url:
-      document.getElementById("gameIconUrl")
+      document
+        .getElementById(
+          "gameIconUrl"
+        )
         .value
         .trim(),
 
     banner_url:
-      document.getElementById("gameBannerUrl")
+      document
+        .getElementById(
+          "gameBannerUrl"
+        )
         .value
         .trim(),
 
     sort_order:
       Number(
-        document.getElementById(
-          "gameSortOrder"
-        ).value
+        document
+          .getElementById(
+            "gameSortOrder"
+          )
+          .value
       ) || 0,
 
     is_active:
-      document.getElementById(
-        "gameActive"
-      ).value === "true"
+      document
+        .getElementById(
+          "gameActive"
+        )
+        .value ===
+      "true"
 
   };
 
 
-  if (!game.name || !game.slug) {
+  if (
+    !game.name ||
+    !game.slug
+  ) {
 
     alert(
       "กรุณากรอกชื่อเกมและ Slug"
@@ -592,7 +877,7 @@ async function saveGame() {
   if (result.error) {
 
     alert(
-      "บันทึกไม่สำเร็จ:\n" +
+      "บันทึกเกมไม่สำเร็จ:\n" +
       result.error.message
     );
 
@@ -600,12 +885,17 @@ async function saveGame() {
   }
 
 
-  alert("บันทึกเกมเรียบร้อยแล้ว");
+  alert(
+    "บันทึกเกมเรียบร้อยแล้ว"
+  );
+
 
   closeGameModal();
 
-  loadGames();
+  await loadGames();
+
 }
+
 
 
 async function deleteGame(id) {
@@ -631,7 +921,7 @@ async function deleteGame(id) {
   if (error) {
 
     alert(
-      "ลบไม่สำเร็จ:\n" +
+      "ลบเกมไม่สำเร็จ:\n" +
       error.message
     );
 
@@ -639,14 +929,19 @@ async function deleteGame(id) {
   }
 
 
-  alert("ลบเกมเรียบร้อยแล้ว");
+  alert(
+    "ลบเกมเรียบร้อยแล้ว"
+  );
 
-  loadGames();
+
+  await loadGames();
+
 }
 
 
+
 /* =========================
-   PRODUCT GAMES
+   PRODUCT GAME LIST
 ========================= */
 
 async function loadProductGames() {
@@ -655,6 +950,7 @@ async function loadProductGames() {
     document.getElementById(
       "productGame"
     );
+
 
   if (!select) return;
 
@@ -665,14 +961,23 @@ async function loadProductGames() {
   } =
     await window.supabaseClient
       .from("games")
-      .select("id,name")
-      .order("sort_order");
+      .select(
+        "id,name"
+      )
+      .order(
+        "sort_order",
+        {
+          ascending: true
+        }
+      );
 
 
   if (error) {
 
     select.innerHTML =
-      "<option>โหลดเกมไม่สำเร็จ</option>";
+      `<option value="">
+        โหลดเกมไม่สำเร็จ
+      </option>`;
 
     return;
   }
@@ -685,11 +990,15 @@ async function loadProductGames() {
     (data || [])
       .map(game => `
         <option value="${game.id}">
-          ${escapeHtml(game.name)}
+          ${escapeHtml(
+            game.name
+          )}
         </option>
       `)
       .join("");
+
 }
+
 
 
 /* =========================
@@ -703,11 +1012,14 @@ async function loadProducts() {
       "productsList"
     );
 
+
   if (!container) return;
 
 
   container.innerHTML =
-    "<p>กำลังโหลดสินค้า...</p>";
+    `<p class="loading">
+      กำลังโหลดสินค้า...
+    </p>`;
 
 
   const {
@@ -722,14 +1034,22 @@ async function loadProducts() {
           name
         )
       `)
-      .order("sort_order");
+      .order(
+        "sort_order",
+        {
+          ascending: true
+        }
+      );
 
 
   if (error) {
 
     container.innerHTML =
-      `<p style="color:#ff7777">
-        ${escapeHtml(error.message)}
+      `<p class="error">
+        โหลดสินค้าไม่สำเร็จ<br>
+        ${escapeHtml(
+          error.message
+        )}
       </p>`;
 
     return;
@@ -739,35 +1059,55 @@ async function loadProducts() {
   if (!data?.length) {
 
     container.innerHTML =
-      "<p style='color:#888'>ยังไม่มีสินค้า</p>";
+      `<p style="color:#888">
+        ยังไม่มีสินค้า
+      </p>`;
 
     return;
   }
 
 
   container.innerHTML =
-    data.map(renderProduct).join("");
+    data
+      .map(renderProduct)
+      .join("");
 
 
   document
-    .querySelectorAll(".edit-product")
+    .querySelectorAll(
+      ".edit-product"
+    )
     .forEach(button => {
 
-      button.onclick = () =>
-        editProduct(button.dataset.id);
+      button.addEventListener(
+        "click",
+        () =>
+          editProduct(
+            button.dataset.id
+          )
+      );
 
     });
 
 
   document
-    .querySelectorAll(".delete-product")
+    .querySelectorAll(
+      ".delete-product"
+    )
     .forEach(button => {
 
-      button.onclick = () =>
-        deleteProduct(button.dataset.id);
+      button.addEventListener(
+        "click",
+        () =>
+          deleteProduct(
+            button.dataset.id
+          )
+      );
 
     });
+
 }
+
 
 
 function renderProduct(product) {
@@ -777,18 +1117,44 @@ function renderProduct(product) {
     "https://placehold.co/120x120";
 
 
-  let statusText = "พร้อมขาย";
+  let statusText =
+    "พร้อมขาย";
 
-  if (product.stock <= 0) {
-    statusText = "สินค้าหมด";
+
+  if (
+    product.stock <= 0
+  ) {
+
+    statusText =
+      "สินค้าหมด";
+
+  } else if (
+    product.status ===
+    "sold_out"
+  ) {
+
+    statusText =
+      "สินค้าหมด";
+
+  } else if (
+    product.status ===
+    "hidden"
+  ) {
+
+    statusText =
+      "ซ่อน";
+
   }
 
-  if (product.status === "hidden") {
-    statusText = "ซ่อน";
-  }
+
+  const active =
+    product.stock > 0 &&
+    product.status ===
+      "available";
 
 
   return `
+
     <div class="game-card">
 
       <div class="game-head">
@@ -796,56 +1162,85 @@ function renderProduct(product) {
         <img
           class="game-icon"
           src="${escapeAttribute(image)}"
+          alt=""
+          onerror="
+            this.src='https://placehold.co/120x120'
+          "
         >
+
 
         <div>
 
           <div class="game-name">
-            ${escapeHtml(product.name)}
+
+            ${escapeHtml(
+              product.name
+            )}
+
           </div>
 
+
           <div class="game-slug">
-            ${
-              escapeHtml(
-                product.games?.name ||
-                "ไม่ระบุเกม"
-              )
-            }
+
+            ${escapeHtml(
+              product.games?.name ||
+              "ไม่ระบุเกม"
+            )}
+
           </div>
 
         </div>
 
       </div>
 
-      <div style="margin-top:12px">
+
+      <div
+        style="
+          margin-top:12px;
+          font-size:16px;
+        "
+      >
 
         ราคา:
+
         <strong>
-          ${Number(product.price).toLocaleString()}
+
+          ${Number(
+            product.price
+          ).toLocaleString()}
+
           บาท
+
         </strong>
 
       </div>
 
-      <div style="margin-top:7px">
+
+      <div
+        style="
+          margin-top:7px;
+        "
+      >
 
         สต็อก:
+
         <strong>
           ${product.stock}
         </strong>
 
       </div>
 
-      <div class="status ${
-        product.stock > 0 &&
-        product.status === "available"
+
+      <span class="status ${
+        active
           ? "status-on"
           : "status-off"
       }">
 
         ${statusText}
 
-      </div>
+      </span>
+
 
       <div class="game-actions">
 
@@ -855,6 +1250,7 @@ function renderProduct(product) {
         >
           แก้ไข
         </button>
+
 
         <button
           class="btn btn-danger delete-product"
@@ -866,8 +1262,11 @@ function renderProduct(product) {
       </div>
 
     </div>
+
   `;
+
 }
+
 
 
 /* =========================
@@ -878,66 +1277,89 @@ function openNewProduct() {
 
   document.getElementById(
     "productModalTitle"
-  ).textContent = "เพิ่มสินค้า";
+  ).textContent =
+    "เพิ่มสินค้า";
+
 
   document.getElementById(
     "productId"
   ).value = "";
 
+
   document.getElementById(
     "productGame"
   ).value = "";
+
 
   document.getElementById(
     "productName"
   ).value = "";
 
+
   document.getElementById(
     "productPrice"
   ).value = "";
+
 
   document.getElementById(
     "productStock"
   ).value = 1;
 
+
   document.getElementById(
     "productDescription"
   ).value = "";
+
 
   document.getElementById(
     "productImage"
   ).value = "";
 
+
   document.getElementById(
     "productSortOrder"
   ).value = 0;
 
+
   document.getElementById(
     "productStatus"
-  ).value = "available";
+  ).value =
+    "available";
+
+
+  hidePreview(
+    "productImagePreview"
+  );
+
 
   document
     .getElementById(
-      "productImagePreview"
+      "productModal"
     )
-    .style.display = "none";
+    .classList.remove(
+      "hidden"
+    );
 
-  document
-    .getElementById("productModal")
-    .classList.remove("hidden");
 }
+
 
 
 function closeProductModal() {
 
   document
-    .getElementById("productModal")
-    .classList.add("hidden");
+    .getElementById(
+      "productModal"
+    )
+    .classList.add(
+      "hidden"
+    );
+
 }
 
 
+
 /* =========================
-   PREVIEW PRODUCT IMAGE
+   PRODUCT IMAGE
 ========================= */
 
 function previewProductImage(event) {
@@ -945,35 +1367,45 @@ function previewProductImage(event) {
   const file =
     event.target.files?.[0];
 
+
   const preview =
     document.getElementById(
       "productImagePreview"
     );
 
+
   if (!file) {
 
-    preview.style.display =
-      "none";
+    hidePreview(
+      "productImagePreview"
+    );
 
     return;
   }
 
 
   const url =
-    URL.createObjectURL(file);
+    URL.createObjectURL(
+      file
+    );
+
 
   preview.src = url;
 
   preview.style.display =
     "block";
+
 }
 
 
+
 /* =========================
-   UPLOAD IMAGE
+   UPLOAD PRODUCT IMAGE
 ========================= */
 
-async function uploadProductImage(file) {
+async function uploadProductImage(
+  file
+) {
 
   if (!file) {
     return null;
@@ -988,11 +1420,14 @@ async function uploadProductImage(file) {
 
 
   const filename =
-    `${crypto.randomUUID()}.${extension}`;
+    crypto.randomUUID() +
+    "." +
+    extension;
 
 
   const path =
-    `products/${filename}`;
+    "products/" +
+    filename;
 
 
   const {
@@ -1006,7 +1441,8 @@ async function uploadProductImage(file) {
         file,
         {
           upsert: false,
-          contentType: file.type
+          contentType:
+            file.type
         }
       );
 
@@ -1017,6 +1453,7 @@ async function uploadProductImage(file) {
       "อัปโหลดรูปไม่สำเร็จ: " +
       error.message
     );
+
   }
 
 
@@ -1026,11 +1463,15 @@ async function uploadProductImage(file) {
     window.supabaseClient
       .storage
       .from("store-assets")
-      .getPublicUrl(path);
+      .getPublicUrl(
+        path
+      );
 
 
   return data.publicUrl;
+
 }
+
 
 
 /* =========================
@@ -1101,7 +1542,9 @@ async function saveProduct() {
 
   if (!game_id) {
 
-    alert("กรุณาเลือกเกม");
+    alert(
+      "กรุณาเลือกเกม"
+    );
 
     return;
   }
@@ -1109,21 +1552,31 @@ async function saveProduct() {
 
   if (!name) {
 
-    alert("กรุณาใส่ชื่อสินค้า");
+    alert(
+      "กรุณาใส่ชื่อสินค้า"
+    );
 
     return;
   }
 
 
-  if (Number.isNaN(price) || price < 0) {
+  if (
+    Number.isNaN(price) ||
+    price < 0
+  ) {
 
-    alert("กรุณาใส่ราคาให้ถูกต้อง");
+    alert(
+      "กรุณาใส่ราคาให้ถูกต้อง"
+    );
 
     return;
   }
 
 
-  if (Number.isNaN(stock) || stock < 0) {
+  if (
+    Number.isNaN(stock) ||
+    stock < 0
+  ) {
 
     alert(
       "กรุณาใส่จำนวนสต็อกให้ถูกต้อง"
@@ -1133,27 +1586,30 @@ async function saveProduct() {
   }
 
 
-  const saveButton =
+  const button =
     document.getElementById(
       "saveProductButton"
     );
 
 
-  saveButton.disabled = true;
+  button.disabled = true;
 
-  saveButton.textContent =
+  button.textContent =
     "กำลังบันทึก...";
 
 
   try {
 
-    let image_url = null;
+    let image_url =
+      null;
 
 
     if (file) {
 
       image_url =
-        await uploadProductImage(file);
+        await uploadProductImage(
+          file
+        );
 
     }
 
@@ -1197,20 +1653,27 @@ async function saveProduct() {
         await window.supabaseClient
           .from("products")
           .update(product)
-          .eq("id", id);
+          .eq(
+            "id",
+            id
+          );
 
     } else {
 
       result =
         await window.supabaseClient
           .from("products")
-          .insert(product);
+          .insert(
+            product
+          );
 
     }
 
 
     if (result.error) {
+
       throw result.error;
+
     }
 
 
@@ -1225,6 +1688,7 @@ async function saveProduct() {
 
     await loadProducts();
 
+
   } catch (error) {
 
     alert(
@@ -1232,14 +1696,19 @@ async function saveProduct() {
       error.message
     );
 
+
   } finally {
 
-    saveButton.disabled = false;
+    button.disabled =
+      false;
 
-    saveButton.textContent =
+    button.textContent =
       "บันทึกสินค้า";
+
   }
+
 }
+
 
 
 /* =========================
@@ -1255,13 +1724,21 @@ async function editProduct(id) {
     await window.supabaseClient
       .from("products")
       .select("*")
-      .eq("id", id)
+      .eq(
+        "id",
+        id
+      )
       .single();
 
 
-  if (error || !data) {
+  if (
+    error ||
+    !data
+  ) {
 
-    alert("ไม่พบสินค้านี้");
+    alert(
+      "ไม่พบสินค้านี้"
+    );
 
     return;
   }
@@ -1269,32 +1746,38 @@ async function editProduct(id) {
 
   document.getElementById(
     "productModalTitle"
-  ).textContent = "แก้ไขสินค้า";
+  ).textContent =
+    "แก้ไขสินค้า";
 
 
   document.getElementById(
     "productId"
-  ).value = data.id;
+  ).value =
+    data.id;
 
 
   document.getElementById(
     "productGame"
-  ).value = data.game_id;
+  ).value =
+    data.game_id;
 
 
   document.getElementById(
     "productName"
-  ).value = data.name || "";
+  ).value =
+    data.name || "";
 
 
   document.getElementById(
     "productPrice"
-  ).value = data.price;
+  ).value =
+    data.price;
 
 
   document.getElementById(
     "productStock"
-  ).value = data.stock;
+  ).value =
+    data.stock;
 
 
   document.getElementById(
@@ -1312,7 +1795,8 @@ async function editProduct(id) {
   document.getElementById(
     "productStatus"
   ).value =
-    data.status || "available";
+    data.status ||
+    "available";
 
 
   const preview =
@@ -1331,16 +1815,23 @@ async function editProduct(id) {
 
   } else {
 
-    preview.style.display =
-      "none";
+    hidePreview(
+      "productImagePreview"
+    );
 
   }
 
 
   document
-    .getElementById("productModal")
-    .classList.remove("hidden");
+    .getElementById(
+      "productModal"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
 }
+
 
 
 /* =========================
@@ -1364,7 +1855,10 @@ async function deleteProduct(id) {
     await window.supabaseClient
       .from("products")
       .delete()
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if (error) {
@@ -1383,8 +1877,123 @@ async function deleteProduct(id) {
   );
 
 
-  loadProducts();
+  await loadProducts();
+
 }
+
+
+
+/* =========================
+   SHOP SETTINGS
+========================= */
+
+function saveShopSettings() {
+
+  const name =
+    document.getElementById(
+      "shopName"
+    ).value.trim();
+
+
+  const tagline =
+    document.getElementById(
+      "shopTagline"
+    ).value.trim();
+
+
+  localStorage.setItem(
+    "ASIRASHOP_shopName",
+    name
+  );
+
+
+  localStorage.setItem(
+    "ASIRASHOP_shopTagline",
+    tagline
+  );
+
+
+  alert(
+    "บันทึกการตั้งค่าแล้ว"
+  );
+
+}
+
+
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
+
+function updateImagePreview(
+  inputId,
+  previewId
+) {
+
+  const input =
+    document.getElementById(
+      inputId
+    );
+
+
+  const preview =
+    document.getElementById(
+      previewId
+    );
+
+
+  if (
+    !input ||
+    !preview
+  ) {
+    return;
+  }
+
+
+  const value =
+    input.value.trim();
+
+
+  if (!value) {
+
+    hidePreview(
+      previewId
+    );
+
+    return;
+  }
+
+
+  preview.src =
+    value;
+
+
+  preview.style.display =
+    "block";
+
+}
+
+
+
+function hidePreview(
+  previewId
+) {
+
+  const preview =
+    document.getElementById(
+      previewId
+    );
+
+
+  if (preview) {
+
+    preview.style.display =
+      "none";
+
+  }
+
+}
+
 
 
 /* =========================
@@ -1393,20 +2002,39 @@ async function deleteProduct(id) {
 
 function escapeHtml(value) {
 
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
+  return String(
+    value ?? ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
     .replaceAll(
       "'",
       "&#039;"
     );
+
 }
 
 
-function escapeAttribute(value) {
+function escapeAttribute(
+  value
+) {
 
-  return escapeHtml(value);
+  return escapeHtml(
+    value
+  );
 
 }
