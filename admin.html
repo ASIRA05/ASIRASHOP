@@ -4,291 +4,389 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>ASIRASHOP Admin</title>
-
-  <link rel="stylesheet" href="style.css">
+  <title>ASIRASHOP ADMIN</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      background: #0b0d12;
-      color: #ffffff;
-      font-family: Arial, sans-serif;
+      background: #0b0b0f;
+      color: #f5f5f5;
+      font-family: Arial, "Noto Sans Thai", sans-serif;
     }
 
-    .admin-wrapper {
-      max-width: 1100px;
-      margin: auto;
-      padding: 25px 16px 60px;
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
     }
 
-    .admin-header {
+    .hidden {
+      display: none !important;
+    }
+
+    /* LOGIN */
+
+    #loginPage {
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 25px;
-      flex-wrap: wrap;
-    }
-
-    .admin-title h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    .admin-title p {
-      margin: 6px 0 0;
-      color: #999;
-    }
-
-    .admin-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .admin-btn {
-      border: 0;
-      padding: 11px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      color: white;
-      background: #222733;
-      text-decoration: none;
-      display: inline-flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .admin-btn.primary {
-      background: #7c3aed;
-    }
-
-    .admin-btn.danger {
-      background: #dc2626;
-    }
-
-    .admin-btn:hover {
-      opacity: .85;
-    }
-
-    .admin-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .admin-card {
-      background: #141821;
-      border: 1px solid #272d39;
-      border-radius: 16px;
       padding: 20px;
     }
 
-    .admin-card.full {
-      grid-column: 1 / -1;
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      padding: 30px;
+      border: 1px solid #292932;
+      border-radius: 18px;
+      background: #131319;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
     }
 
-    .admin-card h2 {
-      margin: 0 0 5px;
-      font-size: 20px;
+    .login-logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 18px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #ffffff, #777);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 900;
+      font-size: 24px;
     }
 
-    .admin-card > p {
-      margin: 0 0 18px;
-      color: #9299a8;
-      font-size: 14px;
+    .login-box h1 {
+      text-align: center;
+      margin: 0 0 8px;
+    }
+
+    .login-box p {
+      text-align: center;
+      color: #999;
+      margin-bottom: 25px;
     }
 
     .field {
-      margin-bottom: 16px;
-    }
-
-    .field:last-child {
-      margin-bottom: 0;
+      margin-bottom: 15px;
     }
 
     .field label {
       display: block;
       margin-bottom: 7px;
+      color: #ccc;
       font-size: 14px;
-      font-weight: bold;
     }
 
-    .field input[type="text"],
-    .field input[type="url"] {
+    .field input,
+    .field textarea,
+    .field select {
       width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
+      border: 1px solid #33333d;
       border-radius: 10px;
-      border: 1px solid #303744;
-      background: #0d1016;
-      color: #fff;
+      background: #0c0c10;
+      color: white;
+      padding: 12px;
       outline: none;
     }
 
-    .field input[type="text"]:focus,
-    .field input[type="url"]:focus {
-      border-color: #7c3aed;
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #777;
     }
 
-    .color-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .color-row input[type="color"] {
-      width: 55px;
-      height: 42px;
-      padding: 2px;
-      border: 1px solid #333;
-      border-radius: 9px;
-      background: transparent;
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 16px;
       cursor: pointer;
+      transition: .2s;
     }
 
-    .switch-list {
-      display: grid;
-      gap: 10px;
+    .btn:hover {
+      transform: translateY(-1px);
+      opacity: .9;
     }
 
-    .switch-item {
+    .btn-primary {
+      background: white;
+      color: black;
+    }
+
+    .btn-dark {
+      background: #22222b;
+      color: white;
+    }
+
+    .btn-danger {
+      background: #8d2020;
+      color: white;
+    }
+
+    .btn-success {
+      background: #236b3b;
+      color: white;
+    }
+
+    .full {
+      width: 100%;
+    }
+
+    #loginMessage {
+      margin-top: 15px;
+      text-align: center;
+      color: #ff7777;
+      min-height: 20px;
+    }
+
+    /* ADMIN */
+
+    #adminPage {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(11,11,15,.95);
+      border-bottom: 1px solid #25252d;
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar-inner {
+      max-width: 1200px;
+      margin: auto;
+      padding: 15px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 15px;
-      padding: 13px;
-      background: #0d1016;
-      border: 1px solid #242a35;
-      border-radius: 11px;
     }
 
-    .switch-info strong {
-      display: block;
-      font-size: 14px;
+    .brand {
+      font-size: 21px;
+      font-weight: 900;
     }
 
-    .switch-info span {
-      display: block;
-      color: #8e95a3;
+    .brand span {
+      color: #999;
       font-size: 12px;
+      display: block;
+      font-weight: normal;
       margin-top: 3px;
     }
 
-    .switch {
-      position: relative;
-      width: 48px;
-      height: 26px;
-      flex-shrink: 0;
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 25px 20px 60px;
     }
 
-    .switch input {
-      display: none;
+    .page-title {
+      margin-bottom: 25px;
     }
 
-    .slider {
-      position: absolute;
-      inset: 0;
-      background: #343a46;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: .2s;
+    .page-title h2 {
+      margin: 0;
+      font-size: 28px;
     }
 
-    .slider:before {
-      content: "";
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      left: 3px;
-      top: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: .2s;
+    .page-title p {
+      color: #999;
+      margin: 7px 0 0;
     }
 
-    .switch input:checked + .slider {
-      background: #7c3aed;
-    }
-
-    .switch input:checked + .slider:before {
-      transform: translateX(22px);
-    }
-
-    .preview-box {
-      border: 1px solid #2a303b;
-      background: #0d1016;
-      border-radius: 14px;
+    .card {
+      background: #131319;
+      border: 1px solid #282831;
+      border-radius: 16px;
       padding: 20px;
-    }
-
-    .preview-logo {
-      width: 65px;
-      height: 65px;
-      object-fit: contain;
-      border-radius: 12px;
-      background: #1b202b;
-      display: none;
-      margin-bottom: 12px;
-    }
-
-    .preview-name {
-      font-size: 25px;
-      font-weight: bold;
-    }
-
-    .preview-tagline {
-      color: #9299a8;
-      margin-top: 4px;
-    }
-
-    .color-preview {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-top: 15px;
-    }
-
-    .color-preview div {
-      height: 50px;
-      border-radius: 8px;
-      border: 1px solid #333;
-    }
-
-    .status {
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 10px;
-      background: #10251a;
-      color: #74e39b;
-      display: none;
-      font-size: 14px;
-    }
-
-    .warning {
-      background: #261f0e;
-      color: #e9c46a;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 13px;
-      line-height: 1.6;
       margin-bottom: 20px;
     }
 
-    @media (max-width: 750px) {
-      .admin-grid {
+    .card h3 {
+      margin-top: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .section-header h3 {
+      margin: 0;
+    }
+
+    /* GAMES */
+
+    #gamesList {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .game-card {
+      border: 1px solid #2b2b35;
+      border-radius: 14px;
+      padding: 15px;
+      background: #0e0e13;
+    }
+
+    .game-head {
+      display: flex;
+      gap: 13px;
+      align-items: center;
+    }
+
+    .game-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #24242c;
+      flex-shrink: 0;
+    }
+
+    .game-name {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .game-slug {
+      color: #777;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .status {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .status-on {
+      background: #173d25;
+      color: #70d891;
+    }
+
+    .status-off {
+      background: #3d1919;
+      color: #ff8585;
+    }
+
+    .game-description {
+      color: #aaa;
+      font-size: 14px;
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+
+    .game-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    /* MODAL */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.75);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 650px;
+      background: #15151c;
+      border: 1px solid #30303a;
+      border-radius: 18px;
+      padding: 22px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: 0;
+      color: #aaa;
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    .preview-image {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+      .grid,
+      #gamesList {
         grid-template-columns: 1fr;
       }
 
-      .admin-card.full {
-        grid-column: auto;
+      .topbar-inner {
+        padding: 13px 15px;
       }
 
-      .color-preview {
-        grid-template-columns: repeat(2, 1fr);
+      .container {
+        padding: 20px 15px 50px;
+      }
+
+      .page-title h2 {
+        font-size: 23px;
+      }
+
+      .game-actions {
+        flex-wrap: wrap;
       }
     }
   </style>
@@ -296,664 +394,641 @@
 
 <body>
 
-<div class="admin-wrapper">
+  <!-- =========================
+       LOGIN PAGE
+  ========================== -->
 
-  <!-- HEADER -->
-  <div class="admin-header">
+  <section id="loginPage">
 
-    <div class="admin-title">
-      <h1>⚙️ ASIRASHOP ADMIN</h1>
-      <p>จัดการหน้าตาเว็บไซต์ของคุณ</p>
-    </div>
+    <div class="login-box">
 
-    <div class="admin-actions">
-      <a href="index.html" class="admin-btn">
-        🏠 กลับหน้าร้าน
-      </a>
+      <div class="login-logo">
+        AS
+      </div>
 
-      <button class="admin-btn primary" onclick="saveAdminSettings()">
-        💾 บันทึก
+      <h1>ASIRASHOP</h1>
+
+      <p>ระบบจัดการร้านค้า</p>
+
+      <div class="field">
+        <label for="adminEmail">อีเมลแอดมิน</label>
+
+        <input
+          id="adminEmail"
+          type="email"
+          placeholder="กรอกอีเมล"
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="field">
+        <label for="adminPassword">รหัสผ่าน</label>
+
+        <input
+          id="adminPassword"
+          type="password"
+          placeholder="กรอกรหัสผ่าน"
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button
+        id="loginButton"
+        class="btn btn-primary full"
+      >
+        เข้าสู่ระบบ
       </button>
 
-      <button class="admin-btn danger" onclick="resetAdminSettings()">
-        ↩ รีเซ็ต
-      </button>
+      <div id="loginMessage"></div>
+
     </div>
 
-  </div>
+  </section>
 
 
-  <div class="warning">
-    ⚠️ <b>ระบบปัจจุบัน:</b>
-    การตั้งค่าจะถูกบันทึกไว้ในเบราว์เซอร์ของเครื่องนี้
-    เหมาะสำหรับทดลองระบบฟรีก่อน
-    หากต้องการให้แอดมินเปลี่ยนเว็บแล้วลูกค้าทุกคนเห็นเหมือนกัน
-    เราจะทำระบบฐานข้อมูลให้ในขั้นต่อไป
-  </div>
+  <!-- =========================
+       ADMIN PAGE
+  ========================== -->
 
+  <section id="adminPage" class="hidden">
 
-  <div class="admin-grid">
+    <header class="topbar">
 
-    <!-- WEBSITE -->
-    <div class="admin-card">
+      <div class="topbar-inner">
 
-      <h2>🏪 ข้อมูลร้าน</h2>
-      <p>ตั้งชื่อและคำโปรยของ ASIRASHOP</p>
+        <div class="brand">
+          ASIRASHOP
+          <span>ADMIN PANEL</span>
+        </div>
 
-      <div class="field">
-        <label>ชื่อร้าน</label>
-
-        <input
-          type="text"
-          id="siteName"
-          placeholder="ASIRASHOP"
+        <button
+          id="logoutButton"
+          class="btn btn-dark"
         >
+          ออกจากระบบ
+        </button>
+
       </div>
 
-      <div class="field">
-        <label>คำโปรย</label>
+    </header>
 
-        <input
-          type="text"
-          id="siteTagline"
-          placeholder="GAME ID STORE"
-        >
+
+    <main class="container">
+
+      <div class="page-title">
+
+        <h2>แผงควบคุมร้านค้า</h2>
+
+        <p>
+          จัดการเกม สินค้า รูปภาพ ราคา และสต็อกของ ASIRASHOP
+        </p>
+
       </div>
 
+
+      <!-- =========================
+           SHOP SETTINGS
+      ========================== -->
+
+      <section class="card">
+
+        <h3>ตั้งค่าร้าน</h3>
+
+        <div class="grid">
+
+          <div class="field">
+
+            <label>ชื่อร้าน</label>
+
+            <input
+              id="shopName"
+              type="text"
+              value="ASIRASHOP"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>คำโปรยร้าน</label>
+
+            <input
+              id="shopTagline"
+              type="text"
+              value="ร้านขายไอดีเกม"
+            >
+
+          </div>
+
+        </div>
+
+
+        <button
+          id="saveShopSettings"
+          class="btn btn-primary"
+        >
+          บันทึกการตั้งค่า
+        </button>
+
+      </section>
+
+
+      <!-- =========================
+           GAMES
+      ========================== -->
+
+      <section class="card">
+
+        <div class="section-header">
+
+          <h3>จัดการเกม</h3>
+
+          <button
+            id="addGameButton"
+            class="btn btn-primary"
+          >
+            + เพิ่มเกม
+          </button>
+
+        </div>
+
+
+        <div id="gamesList">
+
+          <p>
+            กำลังโหลดเกม...
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           PRODUCTS
+      ========================== -->
+
+      <section class="card">
+
+        <div class="section-header">
+
+          <h3>สินค้า</h3>
+
+          <button
+            id="addProductButton"
+            class="btn btn-primary"
+            type="button"
+          >
+            + เพิ่มสินค้า
+          </button>
+
+        </div>
+
+        <p style="color:#888;">
+          ระบบสินค้าและสต็อกจะเชื่อมต่อกับฐานข้อมูลในขั้นถัดไป
+        </p>
+
+      </section>
+
+
+      <!-- =========================
+           QUICK INFO
+      ========================== -->
+
+      <section class="card">
+
+        <h3>สถานะระบบ</h3>
+
+        <p id="adminStatus">
+          กำลังตรวจสอบบัญชี...
+        </p>
+
+      </section>
+
+    </main>
+
+  </section>
+
+
+  <!-- =========================
+       GAME MODAL
+  ========================== -->
+
+  <div
+    id="gameModal"
+    class="modal hidden"
+  >
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+
+        <h3 id="gameModalTitle">
+          เพิ่มเกม
+        </h3>
+
+        <button
+          id="closeGameModal"
+          class="close-btn"
+          type="button"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <input
+        id="gameId"
+        type="hidden"
+      >
+
+
       <div class="field">
-        <label>โลโก้ URL</label>
+
+        <label>
+          ชื่อเกม
+        </label>
 
         <input
+          id="gameName"
+          type="text"
+          placeholder="เช่น eFootball Mobile"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Slug
+        </label>
+
+        <input
+          id="gameSlug"
+          type="text"
+          placeholder="เช่น efootball"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          คำอธิบาย
+        </label>
+
+        <textarea
+          id="gameDescription"
+          rows="4"
+          placeholder="รายละเอียดเกม"
+        ></textarea>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          ลิงก์รูปไอคอน
+        </label>
+
+        <input
+          id="gameIconUrl"
           type="url"
-          id="siteLogo"
           placeholder="https://..."
         >
-      </div>
-
-      <div class="field">
-        <label>Favicon URL</label>
-
-        <input
-          type="url"
-          id="siteFavicon"
-          placeholder="https://..."
-        >
-      </div>
-
-    </div>
-
-
-    <!-- COLORS -->
-    <div class="admin-card">
-
-      <h2>🎨 สีเว็บไซต์</h2>
-      <p>เปลี่ยนธีมของร้านได้ทันที</p>
-
-      <div class="field">
-        <label>พื้นหลังหลัก</label>
-
-        <div class="color-row">
-          <input type="text" id="colorBg">
-          <input type="color" id="colorBgPicker">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>พื้นหลังกล่อง</label>
-
-        <div class="color-row">
-          <input type="text" id="colorSurface">
-          <input type="color" id="colorSurfacePicker">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>พื้นหลังกล่องรอง</label>
-
-        <div class="color-row">
-          <input type="text" id="colorSurface2">
-          <input type="color" id="colorSurface2Picker">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>สีเส้นขอบ</label>
-
-        <div class="color-row">
-          <input type="text" id="colorBorder">
-          <input type="color" id="colorBorderPicker">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>สีตัวอักษร</label>
-
-        <div class="color-row">
-          <input type="text" id="colorText">
-          <input type="color" id="colorTextPicker">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>สีตัวอักษรรอง</label>
-
-        <div class="color-row">
-          <input type="text" id="colorMuted">
-          <input type="color" id="colorMutedPicker">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>สีหลักร้าน</label>
-
-        <div class="color-row">
-          <input type="text" id="colorPrimary">
-          <input type="color" id="colorPrimaryPicker">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>สีตัวอักษรบนสีหลัก</label>
-
-        <div class="color-row">
-          <input type="text" id="colorPrimaryText">
-          <input type="color" id="colorPrimaryTextPicker">
-        </div>
-      </div>
-
-    </div>
-
-
-    <!-- HOMEPAGE -->
-    <div class="admin-card full">
-
-      <h2>👁️ ส่วนต่าง ๆ ของหน้าแรก</h2>
-      <p>เลือกได้ว่าจะให้ส่วนไหนแสดงบนหน้าเว็บไซต์</p>
-
-      <div class="switch-list">
-
-        <div class="switch-item">
-          <div class="switch-info">
-            <strong>🎬 Hero Banner</strong>
-            <span>แบนเนอร์ใหญ่ด้านบน</span>
-          </div>
-
-          <label class="switch">
-            <input type="checkbox" id="sectionHero">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-
-        <div class="switch-item">
-          <div class="switch-info">
-            <strong>🎮 เกมทั้งหมด</strong>
-            <span>eFootball / Heartopia / Free Fire / RoV</span>
-          </div>
-
-          <label class="switch">
-            <input type="checkbox" id="sectionGames">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-
-        <div class="switch-item">
-          <div class="switch-info">
-            <strong>🆕 สินค้าใหม่</strong>
-            <span>แสดงสินค้าใหม่ล่าสุด</span>
-          </div>
-
-          <label class="switch">
-            <input type="checkbox" id="sectionNewProducts">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-
-        <div class="switch-item">
-          <div class="switch-info">
-            <strong>🔥 สินค้ายอดนิยม</strong>
-            <span>แสดงสินค้าแนะนำ</span>
-          </div>
-
-          <label class="switch">
-            <input type="checkbox" id="sectionPopularProducts">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-
-        <div class="switch-item">
-          <div class="switch-info">
-            <strong>🎁 โปรโมชั่น</strong>
-            <span>แสดงโปรโมชั่นของร้าน</span>
-          </div>
-
-          <label class="switch">
-            <input type="checkbox" id="sectionPromotion">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-
-        <div class="switch-item">
-          <div class="switch-info">
-            <strong>⭐ รีวิว</strong>
-            <span>แสดงรีวิวลูกค้า</span>
-          </div>
-
-          <label class="switch">
-            <input type="checkbox" id="sectionReviews">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-
-        <div class="switch-item">
-          <div class="switch-info">
-            <strong>🛒 วิธีสั่งซื้อ</strong>
-            <span>ขั้นตอนการซื้อสินค้า</span>
-          </div>
-
-          <label class="switch">
-            <input type="checkbox" id="sectionHowToBuy">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-
-        <div class="switch-item">
-          <div class="switch-info">
-            <strong>❓ FAQ</strong>
-            <span>คำถามที่พบบ่อย</span>
-          </div>
-
-          <label class="switch">
-            <input type="checkbox" id="sectionFaq">
-            <span class="slider"></span>
-          </label>
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- PREVIEW -->
-    <div class="admin-card full">
-
-      <h2>👀 ตัวอย่าง</h2>
-      <p>ดูข้อมูลร้านก่อนบันทึก</p>
-
-      <div class="preview-box">
 
         <img
-          id="previewLogo"
-          class="preview-logo"
-          alt="Logo"
+          id="gameIconPreview"
+          class="preview-image"
+          alt="Preview"
         >
 
-        <div
-          id="previewName"
-          class="preview-name"
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          ลิงก์รูป Banner
+        </label>
+
+        <input
+          id="gameBannerUrl"
+          type="url"
+          placeholder="https://..."
         >
-          ASIRASHOP
+
+        <img
+          id="gameBannerPreview"
+          class="preview-image"
+          alt="Preview"
+        >
+
+      </div>
+
+
+      <div class="grid">
+
+        <div class="field">
+
+          <label>
+            ลำดับการแสดง
+          </label>
+
+          <input
+            id="gameSortOrder"
+            type="number"
+            value="0"
+          >
+
         </div>
 
-        <div
-          id="previewTagline"
-          class="preview-tagline"
-        >
-          GAME ID STORE
-        </div>
 
-        <div class="color-preview">
+        <div class="field">
 
-          <div id="previewBg"></div>
+          <label>
+            สถานะ
+          </label>
 
-          <div id="previewSurface"></div>
+          <select id="gameActive">
 
-          <div id="previewPrimary"></div>
+            <option value="true">
+              เปิดแสดง
+            </option>
 
-          <div id="previewText"></div>
+            <option value="false">
+              ซ่อน
+            </option>
+
+          </select>
 
         </div>
 
       </div>
 
-      <div
-        id="saveStatus"
-        class="status"
-      >
-        ✅ บันทึกการตั้งค่าเรียบร้อยแล้ว
+
+      <div class="modal-actions">
+
+        <button
+          id="cancelGameButton"
+          class="btn btn-dark"
+          type="button"
+        >
+          ยกเลิก
+        </button>
+
+        <button
+          id="saveGameButton"
+          class="btn btn-primary"
+          type="button"
+        >
+          บันทึกเกม
+        </button>
+
       </div>
 
     </div>
 
   </div>
 
-</div>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Supabase connection -->
+  <script src="supabase.js"></script>
+
+  <!-- Admin system -->
+  <script src="admin.js"></script>
 
 
-<script src="script.js"></script>
+  <!-- =========================
+       BASIC ADMIN FUNCTIONS
+  ========================== -->
 
-<script>
+  <script>
 
-  const $ = id => document.getElementById(id);
+    /*
+      ตรวจสอบว่ามี Supabase client หรือไม่
+    */
 
+    window.addEventListener("load", () => {
 
-  function loadAdminSettings() {
+      if (!window.supabaseClient) {
 
-    const s = window.ASIRASHOP
-      ? window.ASIRASHOP.getSettings()
-      : null;
+        console.error("Supabase client not found.");
 
-    if (!s) {
-      alert("ไม่พบระบบตั้งค่า กรุณาตรวจสอบ script.js");
-      return;
-    }
+        const message =
+          document.getElementById("loginMessage");
 
+        if (message) {
 
-    $("siteName").value =
-      s.site?.name || "ASIRASHOP";
+          message.textContent =
+            "ไม่พบการเชื่อมต่อ Supabase";
 
-    $("siteTagline").value =
-      s.site?.tagline || "GAME ID STORE";
+        }
 
-    $("siteLogo").value =
-      s.site?.logo || "";
-
-    $("siteFavicon").value =
-      s.site?.favicon || "";
-
-
-    setColor("Bg", s.colors?.bg || "#0b0d12");
-
-    setColor("Surface", s.colors?.surface || "#141821");
-
-    setColor("Surface2", s.colors?.surface2 || "#1c2230");
-
-    setColor("Border", s.colors?.border || "#272d39");
-
-    setColor("Text", s.colors?.text || "#ffffff");
-
-    setColor("Muted", s.colors?.muted || "#999999");
-
-    setColor("Primary", s.colors?.primary || "#7c3aed");
-
-    setColor(
-      "PrimaryText",
-      s.colors?.primaryText || "#ffffff"
-    );
-
-
-    $("sectionHero").checked =
-      s.homepage?.hero !== false;
-
-    $("sectionGames").checked =
-      s.homepage?.games !== false;
-
-    $("sectionNewProducts").checked =
-      s.homepage?.newProducts !== false;
-
-    $("sectionPopularProducts").checked =
-      s.homepage?.popularProducts !== false;
-
-    $("sectionPromotion").checked =
-      s.homepage?.promotion !== false;
-
-    $("sectionReviews").checked =
-      s.homepage?.reviews !== false;
-
-    $("sectionHowToBuy").checked =
-      s.homepage?.howToBuy !== false;
-
-    $("sectionFaq").checked =
-      s.homepage?.faq !== false;
-
-
-    updatePreview();
-
-  }
-
-
-  function setColor(name, value) {
-
-    const text = $("color" + name);
-
-    const picker = $("color" + name + "Picker");
-
-    text.value = value;
-
-    picker.value = normalizeColor(value);
-
-
-    picker.addEventListener("input", function() {
-
-      text.value = this.value;
-
-      updatePreview();
-
-    });
-
-
-    text.addEventListener("input", function() {
-
-      if (/^#[0-9a-fA-F]{6}$/.test(this.value)) {
-
-        picker.value = this.value;
+        return;
 
       }
 
-      updatePreview();
-
     });
 
-  }
+
+    /*
+      เปิด/ปิด Modal
+    */
+
+    const gameModal =
+      document.getElementById("gameModal");
+
+    const addGameButton =
+      document.getElementById("addGameButton");
+
+    const closeGameModal =
+      document.getElementById("closeGameModal");
+
+    const cancelGameButton =
+      document.getElementById("cancelGameButton");
 
 
-  function normalizeColor(value) {
+    function openGameModal() {
 
-    if (!value) return "#000000";
-
-    if (/^#[0-9a-fA-F]{6}$/.test(value)) {
-
-      return value;
-
-    }
-
-    return "#000000";
-
-  }
-
-
-  function getColor(name) {
-
-    return $("color" + name).value;
-
-  }
-
-
-  function updatePreview() {
-
-    $("previewName").textContent =
-      $("siteName").value || "ASIRASHOP";
-
-    $("previewTagline").textContent =
-      $("siteTagline").value || "GAME ID STORE";
-
-
-    const logo =
-      $("siteLogo").value.trim();
-
-    if (logo) {
-
-      $("previewLogo").src = logo;
-
-      $("previewLogo").style.display = "block";
-
-    } else {
-
-      $("previewLogo").style.display = "none";
+      gameModal.classList.remove("hidden");
 
     }
 
 
-    $("previewBg").style.background =
-      getColor("Bg");
+    function closeGameModalFunction() {
 
-    $("previewSurface").style.background =
-      getColor("Surface");
+      gameModal.classList.add("hidden");
 
-    $("previewPrimary").style.background =
-      getColor("Primary");
-
-    $("previewText").style.background =
-      getColor("Text");
-
-  }
+    }
 
 
-  function collectSettings() {
+    if (addGameButton) {
 
-    const current =
-      window.ASIRASHOP.getSettings();
+      addGameButton.addEventListener(
+        "click",
+        () => {
 
+          document.getElementById("gameModalTitle")
+            .textContent = "เพิ่มเกม";
 
-    current.site = {
+          document.getElementById("gameId")
+            .value = "";
 
-      ...(current.site || {}),
+          document.getElementById("gameName")
+            .value = "";
 
-      name:
-        $("siteName").value.trim() ||
-        "ASIRASHOP",
+          document.getElementById("gameSlug")
+            .value = "";
 
-      tagline:
-        $("siteTagline").value.trim() ||
-        "GAME ID STORE",
+          document.getElementById("gameDescription")
+            .value = "";
 
-      logo:
-        $("siteLogo").value.trim(),
+          document.getElementById("gameIconUrl")
+            .value = "";
 
-      favicon:
-        $("siteFavicon").value.trim()
+          document.getElementById("gameBannerUrl")
+            .value = "";
 
-    };
+          document.getElementById("gameSortOrder")
+            .value = "0";
 
+          document.getElementById("gameActive")
+            .value = "true";
 
-    current.colors = {
+          openGameModal();
 
-      ...(current.colors || {}),
-
-      bg: getColor("Bg"),
-
-      surface: getColor("Surface"),
-
-      surface2: getColor("Surface2"),
-
-      border: getColor("Border"),
-
-      text: getColor("Text"),
-
-      muted: getColor("Muted"),
-
-      primary: getColor("Primary"),
-
-      primaryText:
-        getColor("PrimaryText")
-
-    };
-
-
-    current.homepage = {
-
-      ...(current.homepage || {}),
-
-      hero:
-        $("sectionHero").checked,
-
-      games:
-        $("sectionGames").checked,
-
-      newProducts:
-        $("sectionNewProducts").checked,
-
-      popularProducts:
-        $("sectionPopularProducts").checked,
-
-      promotion:
-        $("sectionPromotion").checked,
-
-      reviews:
-        $("sectionReviews").checked,
-
-      howToBuy:
-        $("sectionHowToBuy").checked,
-
-      faq:
-        $("sectionFaq").checked
-
-    };
-
-
-    return current;
-
-  }
-
-
-  function saveAdminSettings() {
-
-    const settings =
-      collectSettings();
-
-
-    window.ASIRASHOP.saveSettings(settings);
-
-    window.ASIRASHOP.apply();
-
-
-    $("saveStatus").style.display =
-      "block";
-
-
-    setTimeout(() => {
-
-      $("saveStatus").style.display =
-        "none";
-
-    }, 2500);
-
-  }
-
-
-  function resetAdminSettings() {
-
-    const ok =
-      confirm(
-        "ต้องการรีเซ็ตการตั้งค่า ASIRASHOP ทั้งหมดหรือไม่?"
+        }
       );
 
-    if (!ok) return;
+    }
 
 
-    window.ASIRASHOP.resetSettings();
+    if (closeGameModal) {
 
-    loadAdminSettings();
+      closeGameModal.addEventListener(
+        "click",
+        closeGameModalFunction
+      );
 
-    alert(
-      "รีเซ็ตการตั้งค่าเรียบร้อยแล้ว"
-    );
-
-  }
+    }
 
 
-  document.addEventListener(
-    "DOMContentLoaded",
-    loadAdminSettings
-  );
+    if (cancelGameButton) {
 
-</script>
+      cancelGameButton.addEventListener(
+        "click",
+        closeGameModalFunction
+      );
+
+    }
+
+
+    /*
+      Preview รูป
+    */
+
+    const iconUrl =
+      document.getElementById("gameIconUrl");
+
+    const iconPreview =
+      document.getElementById("gameIconPreview");
+
+
+    if (iconUrl) {
+
+      iconUrl.addEventListener(
+        "input",
+        () => {
+
+          if (!iconUrl.value.trim()) {
+
+            iconPreview.style.display = "none";
+
+            return;
+
+          }
+
+          iconPreview.src =
+            iconUrl.value.trim();
+
+          iconPreview.style.display =
+            "block";
+
+        }
+      );
+
+    }
+
+
+    const bannerUrl =
+      document.getElementById("gameBannerUrl");
+
+    const bannerPreview =
+      document.getElementById("gameBannerPreview");
+
+
+    if (bannerUrl) {
+
+      bannerUrl.addEventListener(
+        "input",
+        () => {
+
+          if (!bannerUrl.value.trim()) {
+
+            bannerPreview.style.display = "none";
+
+            return;
+
+          }
+
+          bannerPreview.src =
+            bannerUrl.value.trim();
+
+          bannerPreview.style.display =
+            "block";
+
+        }
+      );
+
+    }
+
+
+    /*
+      ปุ่มเพิ่มสินค้า
+      ตอนนี้ยังไม่ทำงาน
+      จะเชื่อมตาราง Products ในขั้นต่อไป
+    */
+
+    const addProductButton =
+      document.getElementById("addProductButton");
+
+
+    if (addProductButton) {
+
+      addProductButton.addEventListener(
+        "click",
+        () => {
+
+          alert(
+            "ระบบเพิ่มสินค้าจะเปิดใช้งานหลังจากสร้างตารางสินค้า"
+          );
+
+        }
+      );
+
+    }
+
+
+  </script>
 
 </body>
 </html>
