@@ -2,88 +2,170 @@
 // ASIRASHOP ADMIN SYSTEM
 // ========================================
 
-const supabaseClient = window.supabaseClient;
+const supabaseClient =
+  window.supabaseClient;
 
 
 // ========================================
 // ELEMENTS
 // ========================================
 
-const loginPage = document.getElementById("loginPage");
-const adminPage = document.getElementById("adminPage");
+const loginPage =
+  document.getElementById("loginPage");
 
-const loginForm = document.getElementById("loginForm");
-const loginEmail = document.getElementById("loginEmail");
-const loginPassword = document.getElementById("loginPassword");
-const loginButton = document.getElementById("loginButton");
-const loginMessage = document.getElementById("loginMessage");
+const adminPage =
+  document.getElementById("adminPage");
 
-const logoutButton = document.getElementById("logoutButton");
+const loginForm =
+  document.getElementById("loginForm");
 
-const adminStatus = document.getElementById("adminStatus");
+const loginEmail =
+  document.getElementById("loginEmail");
 
-const gamesList = document.getElementById("gamesList");
-const productsList = document.getElementById("productsList");
+const loginPassword =
+  document.getElementById("loginPassword");
 
-const addGameButton = document.getElementById("addGameButton");
-const addProductButton = document.getElementById("addProductButton");
+const loginButton =
+  document.getElementById("loginButton");
 
-const gameModal = document.getElementById("gameModal");
-const productModal = document.getElementById("productModal");
+const loginMessage =
+  document.getElementById("loginMessage");
 
-const gameForm = document.getElementById("gameForm");
-const productForm = document.getElementById("productForm");
+const logoutButton =
+  document.getElementById("logoutButton");
+
+const adminStatus =
+  document.getElementById("adminStatus");
+
+const gamesList =
+  document.getElementById("gamesList");
+
+const productsList =
+  document.getElementById("productsList");
+
+const addGameButton =
+  document.getElementById("addGameButton");
+
+const addProductButton =
+  document.getElementById("addProductButton");
+
+const gameModal =
+  document.getElementById("gameModal");
+
+const productModal =
+  document.getElementById("productModal");
+
+const gameForm =
+  document.getElementById("gameForm");
+
+const productForm =
+  document.getElementById("productForm");
 
 
 // ========================================
-// HELPER
+// STATE
 // ========================================
 
-function showLoginMessage(message, type = "error") {
+let adminReady = false;
 
-  loginMessage.textContent = message;
+let loadingAdmin = false;
+
+
+// ========================================
+// LOGIN MESSAGE
+// ========================================
+
+function showLoginMessage(
+  message,
+  type = "error"
+) {
+
+  if (!loginMessage) {
+    return;
+  }
+
+  loginMessage.textContent =
+    message;
 
   loginMessage.className =
     "message show " + type;
+
 }
 
 
 function clearLoginMessage() {
 
-  loginMessage.textContent = "";
+  if (!loginMessage) {
+    return;
+  }
 
-  loginMessage.className = "message";
+  loginMessage.textContent =
+    "";
+
+  loginMessage.className =
+    "message";
+
 }
 
+
+// ========================================
+// ADMIN STATUS
+// ========================================
 
 function setAdminStatus(message) {
 
   if (adminStatus) {
-    adminStatus.textContent = message;
+
+    adminStatus.textContent =
+      message;
+
   }
+
 }
 
+
+// ========================================
+// HTML ESCAPE
+// ========================================
 
 function escapeHTML(value) {
 
-  if (value === null || value === undefined) {
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
     return "";
+
   }
 
+
   return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
 
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
 
-function wait(ms) {
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
 
-  return new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
@@ -92,37 +174,74 @@ function wait(ms) {
 // TIMEOUT
 // ========================================
 
-async function withTimeout(promise, ms = 15000) {
+function withTimeout(
+  promise,
+  ms = 15000
+) {
 
-  let timer;
+  return new Promise(
+    (resolve, reject) => {
 
-  const timeoutPromise = new Promise((_, reject) => {
+      let finished = false;
 
-    timer = setTimeout(() => {
 
-      reject(
-        new Error(
-          "Supabase ไม่ตอบกลับภายใน 15 วินาที"
+      const timer =
+        setTimeout(
+          () => {
+
+            if (finished) {
+              return;
+            }
+
+            finished = true;
+
+            reject(
+              new Error(
+                "Supabase ไม่ตอบกลับภายใน " +
+                (ms / 1000) +
+                " วินาที"
+              )
+            );
+
+          },
+          ms
+        );
+
+
+      promise
+        .then(
+          value => {
+
+            if (finished) {
+              return;
+            }
+
+            finished = true;
+
+            clearTimeout(timer);
+
+            resolve(value);
+
+          }
         )
-      );
+        .catch(
+          error => {
 
-    }, ms);
+            if (finished) {
+              return;
+            }
 
-  });
+            finished = true;
 
+            clearTimeout(timer);
 
-  try {
+            reject(error);
 
-    return await Promise.race([
-      promise,
-      timeoutPromise
-    ]);
+          }
+        );
 
-  } finally {
-
-    clearTimeout(timer);
-
-  }
+    }
+  );
 
 }
 
@@ -133,19 +252,90 @@ async function withTimeout(promise, ms = 15000) {
 
 function checkSupabaseConnection() {
 
-  if (!window.supabaseClient) {
+  if (
+    !window.supabaseClient ||
+    !window.supabase
+  ) {
 
     showLoginMessage(
       "ไม่พบการเชื่อมต่อ Supabase",
       "error"
     );
 
-    loginButton.disabled = true;
+    if (loginButton) {
+
+      loginButton.disabled =
+        true;
+
+    }
 
     return false;
+
   }
 
+
   return true;
+
+}
+
+
+// ========================================
+// SHOW LOGIN
+// ========================================
+
+function showLoginPage() {
+
+  if (loginPage) {
+
+    loginPage.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  if (adminPage) {
+
+    adminPage.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  adminReady = false;
+
+}
+
+
+// ========================================
+// SHOW ADMIN
+// ========================================
+
+function showAdminPage() {
+
+  if (loginPage) {
+
+    loginPage.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  if (adminPage) {
+
+    adminPage.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  clearLoginMessage();
+
+  adminReady = true;
+
 }
 
 
@@ -155,48 +345,92 @@ function checkSupabaseConnection() {
 
 async function checkAdmin() {
 
+  if (loadingAdmin) {
+
+    return false;
+
+  }
+
+
+  loadingAdmin = true;
+
+
   try {
 
-    const {
-      data: {
-        user
-      },
-      error: sessionError
-    } = await withTimeout(
-      supabaseClient.auth.getUser(),
-      15000
+    console.log(
+      "Checking Supabase session..."
     );
 
 
-    if (sessionError) {
+    const {
+      data,
+      error
+    } = await withTimeout(
+
+      supabaseClient.auth.getSession(),
+
+      15000
+
+    );
+
+
+    if (error) {
 
       console.error(
-        "GET USER ERROR:",
-        sessionError
+        "GET SESSION ERROR:",
+        error
       );
 
+      showLoginPage();
+
       showLoginMessage(
-        "ตรวจสอบบัญชีไม่สำเร็จ: " +
-        sessionError.message
+        "ตรวจสอบ Session ไม่สำเร็จ: " +
+        error.message,
+        "error"
       );
 
       return false;
+
     }
 
 
-    if (!user) {
+    const session =
+      data?.session;
+
+
+    // ------------------------------------
+    // NO SESSION
+    // ------------------------------------
+
+    if (
+      !session ||
+      !session.user
+    ) {
+
+      console.log(
+        "No active session"
+      );
 
       showLoginPage();
 
       return false;
+
     }
 
 
+    const user =
+      session.user;
+
+
     console.log(
-      "Logged in user:",
+      "Current user:",
       user.email
     );
 
+
+    // ------------------------------------
+    // CHECK ADMIN TABLE
+    // ------------------------------------
 
     const {
       data: admin,
@@ -205,11 +439,17 @@ async function checkAdmin() {
 
       supabaseClient
         .from("admins")
-        .select("id,user_id,email")
-        .eq("user_id", user.id)
+        .select(
+          "id,user_id,email"
+        )
+        .eq(
+          "user_id",
+          user.id
+        )
         .maybeSingle(),
 
       15000
+
     );
 
 
@@ -220,39 +460,75 @@ async function checkAdmin() {
         adminError
       );
 
-      showLoginMessage(
-        "ตรวจสอบสิทธิ์แอดมินไม่สำเร็จ: " +
-        adminError.message
-      );
-
-      await supabaseClient.auth.signOut();
-
       showLoginPage();
 
-      return false;
-    }
-
-
-    if (!admin) {
-
       showLoginMessage(
-        "บัญชีนี้เข้าสู่ระบบได้ แต่ไม่มีสิทธิ์แอดมิน",
+        "ตรวจสอบสิทธิ์แอดมินไม่สำเร็จ: " +
+        adminError.message,
         "error"
       );
 
+      return false;
+
+    }
+
+
+    // ------------------------------------
+    // NOT ADMIN
+    // ------------------------------------
+
+    if (!admin) {
+
+      console.error(
+        "User is not admin"
+      );
+
+
       await supabaseClient.auth.signOut();
+
 
       showLoginPage();
 
+
+      showLoginMessage(
+        "บัญชีนี้ไม่มีสิทธิ์แอดมิน",
+        "error"
+      );
+
+
       return false;
+
     }
+
+
+    // ------------------------------------
+    // ADMIN VERIFIED
+    // ------------------------------------
+
+    console.log(
+      "ADMIN VERIFIED:",
+      admin.email
+    );
 
 
     showAdminPage();
 
+
+    setAdminStatus(
+      "กำลังโหลดข้อมูลร้าน..."
+    );
+
+
     await loadAll();
 
+
+    setAdminStatus(
+      "เชื่อมต่อ ASIRASHOP สำเร็จ"
+    );
+
+
     return true;
+
 
   } catch (error) {
 
@@ -261,12 +537,27 @@ async function checkAdmin() {
       error
     );
 
+
+    showLoginPage();
+
+
     showLoginMessage(
       "เกิดข้อผิดพลาด: " +
-      error.message
+      (
+        error.message ||
+        "ไม่ทราบสาเหตุ"
+      ),
+      "error"
     );
 
+
     return false;
+
+
+  } finally {
+
+    loadingAdmin = false;
+
   }
 
 }
@@ -281,32 +572,44 @@ async function loginAdmin(event) {
   event.preventDefault();
 
 
-  if (!checkSupabaseConnection()) {
+  if (
+    !checkSupabaseConnection()
+  ) {
+
     return;
+
   }
 
 
   const email =
     loginEmail.value.trim();
 
+
   const password =
     loginPassword.value;
 
 
-  if (!email || !password) {
+  if (
+    !email ||
+    !password
+  ) {
 
     showLoginMessage(
-      "กรุณากรอกอีเมลและรหัสผ่าน"
+      "กรุณากรอกอีเมลและรหัสผ่าน",
+      "error"
     );
 
     return;
+
   }
 
 
   clearLoginMessage();
 
 
-  loginButton.disabled = true;
+  loginButton.disabled =
+    true;
+
 
   loginButton.textContent =
     "กำลังเข้าสู่ระบบ...";
@@ -315,32 +618,38 @@ async function loginAdmin(event) {
   try {
 
     console.log(
-      "กำลัง Login:",
+      "LOGIN:",
       email
     );
 
 
-    const result =
-      await withTimeout(
-
-        supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: password
-        }),
-
-        15000
-
-      );
-
+    // ------------------------------------
+    // SIGN IN
+    // ------------------------------------
 
     const {
       data,
       error
-    } = result;
+    } = await withTimeout(
+
+      supabaseClient.auth
+        .signInWithPassword({
+
+          email:
+            email,
+
+          password:
+            password
+
+        }),
+
+      15000
+
+    );
 
 
     console.log(
-      "LOGIN RESULT:",
+      "LOGIN RESPONSE:",
       data,
       error
     );
@@ -359,25 +668,31 @@ async function loginAdmin(event) {
         "เข้าสู่ระบบไม่สำเร็จ";
 
 
+      const lower =
+        message.toLowerCase();
+
+
       if (
-        message
-          .toLowerCase()
-          .includes("invalid login credentials")
+        lower.includes(
+          "invalid login credentials"
+        )
       ) {
 
         message =
           "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
+
       }
 
 
       if (
-        message
-          .toLowerCase()
-          .includes("email not confirmed")
+        lower.includes(
+          "email not confirmed"
+        )
       ) {
 
         message =
           "อีเมลนี้ยังไม่ได้ยืนยัน";
+
       }
 
 
@@ -387,31 +702,57 @@ async function loginAdmin(event) {
       );
 
 
-      loginButton.disabled = false;
+      loginButton.disabled =
+        false;
+
 
       loginButton.textContent =
         "เข้าสู่ระบบ";
 
 
       return;
+
     }
 
 
-    if (!data || !data.user) {
+    // ------------------------------------
+    // CHECK SESSION
+    // ------------------------------------
+
+    if (
+      !data ||
+      !data.session ||
+      !data.user
+    ) {
 
       showLoginMessage(
-        "Supabase ไม่ส่งข้อมูลผู้ใช้กลับมา"
+        "เข้าสู่ระบบแล้ว แต่ไม่พบ Session",
+        "error"
       );
 
 
-      loginButton.disabled = false;
+      loginButton.disabled =
+        false;
+
 
       loginButton.textContent =
         "เข้าสู่ระบบ";
 
 
       return;
+
     }
+
+
+    console.log(
+      "LOGIN SUCCESS"
+    );
+
+
+    console.log(
+      "SESSION SAVED:",
+      !!data.session
+    );
 
 
     showLoginMessage(
@@ -420,19 +761,36 @@ async function loginAdmin(event) {
     );
 
 
+    // ------------------------------------
+    // CHECK ADMIN
+    // ------------------------------------
+
     const isAdmin =
       await checkAdmin();
 
 
     if (!isAdmin) {
 
-      loginButton.disabled = false;
+      loginButton.disabled =
+        false;
+
 
       loginButton.textContent =
         "เข้าสู่ระบบ";
 
+
       return;
+
     }
+
+
+    // สำเร็จ
+    loginButton.disabled =
+      false;
+
+
+    loginButton.textContent =
+      "เข้าสู่ระบบ";
 
 
   } catch (error) {
@@ -445,14 +803,18 @@ async function loginAdmin(event) {
 
     showLoginMessage(
       error.message ||
-      "ไม่สามารถเข้าสู่ระบบได้"
+      "ไม่สามารถเข้าสู่ระบบได้",
+      "error"
     );
 
 
-    loginButton.disabled = false;
+    loginButton.disabled =
+      false;
+
 
     loginButton.textContent =
       "เข้าสู่ระบบ";
+
   }
 
 }
@@ -466,7 +828,13 @@ async function logoutAdmin() {
 
   try {
 
-    await supabaseClient.auth.signOut();
+    loginButton.disabled =
+      false;
+
+
+    await supabaseClient.auth
+      .signOut();
+
 
   } catch (error) {
 
@@ -479,28 +847,18 @@ async function logoutAdmin() {
 
 
   showLoginPage();
-}
 
 
-// ========================================
-// PAGE STATE
-// ========================================
-
-function showLoginPage() {
-
-  loginPage.classList.remove("hidden");
-
-  adminPage.classList.add("hidden");
-}
+  loginEmail.value =
+    "";
 
 
-function showAdminPage() {
+  loginPassword.value =
+    "";
 
-  loginPage.classList.add("hidden");
-
-  adminPage.classList.remove("hidden");
 
   clearLoginMessage();
+
 }
 
 
@@ -521,9 +879,11 @@ async function loadAll() {
 
     await loadProducts();
 
+
     setAdminStatus(
       "เชื่อมต่อ ASIRASHOP สำเร็จ"
     );
+
 
   } catch (error) {
 
@@ -532,10 +892,12 @@ async function loadAll() {
       error
     );
 
+
     setAdminStatus(
       "โหลดข้อมูลไม่สำเร็จ: " +
       error.message
     );
+
   }
 
 }
@@ -555,83 +917,115 @@ async function loadGames() {
     supabaseClient
       .from("games")
       .select("*")
-      .order("sort_order", {
-        ascending: true
-      }),
+      .order(
+        "sort_order",
+        {
+          ascending: true
+        }
+      ),
 
     15000
+
   );
 
 
   if (error) {
 
     throw error;
+
   }
 
 
-  renderGames(data || []);
+  renderGames(
+    data || []
+  );
 
-  updateGameSelect(data || []);
+
+  updateGameSelect(
+    data || []
+  );
+
 }
 
+
+// ========================================
+// RENDER GAMES
+// ========================================
 
 function renderGames(games) {
 
   if (!games.length) {
 
     gamesList.innerHTML =
-      `<div class="item">
+      `
+      <div class="item">
         ยังไม่มีเกม
-      </div>`;
+      </div>
+      `;
 
     return;
+
   }
 
 
   gamesList.innerHTML =
-    games.map(game => {
+    games.map(
+      game => {
 
-      return `
-        <div class="item">
+        return `
+          <div class="item">
 
-          <div class="item-main">
+            <div class="item-main">
 
-            <div class="item-title">
-              ${escapeHTML(game.name)}
+              <div class="item-title">
+                ${escapeHTML(
+                  game.name
+                )}
+              </div>
+
+              <div class="item-meta">
+                slug:
+                ${escapeHTML(
+                  game.slug
+                )}
+
+                ·
+
+                ${
+                  game.is_active
+                    ? "แสดง"
+                    : "ซ่อน"
+                }
+              </div>
+
             </div>
 
-            <div class="item-meta">
-              slug: ${escapeHTML(game.slug)}
-              ·
-              ${game.is_active
-                ? "แสดง"
-                : "ซ่อน"}
+
+            <div class="item-actions">
+
+              <button
+                class="small-button edit-button"
+                onclick="editGame('${game.id}')"
+              >
+                แก้ไข
+              </button>
+
+
+              <button
+                class="small-button delete-button"
+                onclick="deleteGame('${game.id}')"
+              >
+                ลบ
+              </button>
+
             </div>
 
           </div>
+        `;
 
-          <div class="item-actions">
+      }
+    ).join("");
 
-            <button
-              class="small-button edit-button"
-              onclick="editGame('${game.id}')"
-            >
-              แก้ไข
-            </button>
-
-            <button
-              class="small-button delete-button"
-              onclick="deleteGame('${game.id}')"
-            >
-              ลบ
-            </button>
-
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
 }
 
 
@@ -653,30 +1047,44 @@ function updateGameSelect(games) {
 
 
   select.innerHTML =
-    `<option value="">
+    `
+    <option value="">
       เลือกเกม
-    </option>`;
+    </option>
+    `;
 
 
-  games.forEach(game => {
+  games.forEach(
+    game => {
 
-    select.innerHTML +=
-      `<option value="${game.id}">
-        ${escapeHTML(game.name)}
-      </option>`;
+      select.innerHTML +=
+        `
+        <option
+          value="${game.id}"
+        >
+          ${escapeHTML(
+            game.name
+          )}
+        </option>
+        `;
 
-  });
+    }
+  );
 
 }
 
 
 // ========================================
-// ADD GAME
+// OPEN GAME MODAL
 // ========================================
 
-function openGameModal(game = null) {
+function openGameModal(
+  game = null
+) {
 
-  gameModal.classList.remove("hidden");
+  gameModal.classList.remove(
+    "hidden"
+  );
 
 
   if (game) {
@@ -734,29 +1142,44 @@ function openGameModal(game = null) {
     ).checked =
       game.is_active !== false;
 
+
   } else {
 
     gameForm.reset();
+
 
     document.getElementById(
       "gameModalTitle"
     ).textContent =
       "เพิ่มเกม";
 
+
     document.getElementById(
       "gameActive"
-    ).checked = true;
+    ).checked =
+      true;
 
   }
 
 }
 
 
+// ========================================
+// CLOSE GAME MODAL
+// ========================================
+
 function closeGameModal() {
 
-  gameModal.classList.add("hidden");
+  gameModal.classList.add(
+    "hidden"
+  );
+
 }
 
+
+// ========================================
+// SAVE GAME
+// ========================================
 
 async function saveGame(event) {
 
@@ -789,12 +1212,14 @@ async function saveGame(event) {
     icon_url:
       document.getElementById(
         "gameIconUrl"
-      ).value.trim() || null,
+      ).value.trim() ||
+      null,
 
     banner_url:
       document.getElementById(
         "gameBannerUrl"
-      ).value.trim() || null,
+      ).value.trim() ||
+      null,
 
     sort_order:
       Number(
@@ -824,10 +1249,15 @@ async function saveGame(event) {
           supabaseClient
             .from("games")
             .update(payload)
-            .eq("id", id),
+            .eq(
+              "id",
+              id
+            ),
 
           15000
+
         );
+
 
     } else {
 
@@ -836,9 +1266,12 @@ async function saveGame(event) {
 
           supabaseClient
             .from("games")
-            .insert(payload),
+            .insert(
+              payload
+            ),
 
           15000
+
         );
 
     }
@@ -847,16 +1280,20 @@ async function saveGame(event) {
     if (result.error) {
 
       throw result.error;
+
     }
 
 
     closeGameModal();
 
+
     await loadGames();
+
 
     setAdminStatus(
       "บันทึกเกมเรียบร้อย"
     );
+
 
   } catch (error) {
 
@@ -864,6 +1301,7 @@ async function saveGame(event) {
       "SAVE GAME ERROR:",
       error
     );
+
 
     alert(
       "บันทึกเกมไม่สำเร็จ:\n" +
@@ -891,19 +1329,28 @@ async function editGame(id) {
       supabaseClient
         .from("games")
         .select("*")
-        .eq("id", id)
+        .eq(
+          "id",
+          id
+        )
         .single(),
 
       15000
+
     );
 
 
     if (error) {
+
       throw error;
+
     }
 
 
-    openGameModal(data);
+    openGameModal(
+      data
+    );
+
 
   } catch (error) {
 
@@ -930,7 +1377,9 @@ async function deleteGame(id) {
 
 
   if (!confirmDelete) {
+
     return;
+
   }
 
 
@@ -943,14 +1392,20 @@ async function deleteGame(id) {
       supabaseClient
         .from("games")
         .delete()
-        .eq("id", id),
+        .eq(
+          "id",
+          id
+        ),
 
       15000
+
     );
 
 
     if (error) {
+
       throw error;
+
     }
 
 
@@ -958,9 +1413,11 @@ async function deleteGame(id) {
 
     await loadProducts();
 
+
     setAdminStatus(
       "ลบเกมเรียบร้อย"
     );
+
 
   } catch (error) {
 
@@ -993,117 +1450,156 @@ async function loadProducts() {
           name
         )
       `)
-      .order("sort_order", {
-        ascending: true
-      }),
+      .order(
+        "sort_order",
+        {
+          ascending: true
+        }
+      ),
 
     15000
+
   );
 
 
   if (error) {
 
     throw error;
+
   }
 
 
-  renderProducts(data || []);
+  renderProducts(
+    data || []
+  );
+
 }
 
 
-function renderProducts(products) {
+// ========================================
+// RENDER PRODUCTS
+// ========================================
+
+function renderProducts(
+  products
+) {
 
   if (!products.length) {
 
     productsList.innerHTML =
-      `<div class="item">
+      `
+      <div class="item">
         ยังไม่มีสินค้า
-      </div>`;
+      </div>
+      `;
 
     return;
+
   }
 
 
   productsList.innerHTML =
-    products.map(product => {
+    products.map(
+      product => {
 
-      let statusText =
-        "พร้อมขาย";
-
-
-      if (product.status === "sold_out") {
-        statusText =
-          "สินค้าหมด";
-      }
+        let statusText =
+          "พร้อมขาย";
 
 
-      if (product.status === "hidden") {
-        statusText =
-          "ซ่อน";
-      }
+        if (
+          product.status ===
+          "sold_out"
+        ) {
+
+          statusText =
+            "สินค้าหมด";
+
+        }
 
 
-      return `
-        <div class="item">
+        if (
+          product.status ===
+          "hidden"
+        ) {
 
-          <div class="item-main">
+          statusText =
+            "ซ่อน";
 
-            <div class="item-title">
-              ${escapeHTML(product.name)}
+        }
+
+
+        return `
+          <div class="item">
+
+            <div class="item-main">
+
+              <div class="item-title">
+                ${escapeHTML(
+                  product.name
+                )}
+              </div>
+
+
+              <div class="item-meta">
+
+                เกม:
+                ${escapeHTML(
+                  product.games?.name ||
+                  "-"
+                )}
+
+                · ราคา:
+                ${Number(
+                  product.price
+                ).toLocaleString()}
+                บาท
+
+                · สต็อก:
+                ${product.stock}
+
+                ·
+                ${statusText}
+
+              </div>
+
             </div>
 
-            <div class="item-meta">
 
-              เกม:
-              ${escapeHTML(
-                product.games?.name ||
-                "-"
-              )}
+            <div class="item-actions">
 
-              · ราคา:
-              ${Number(product.price).toLocaleString()}
-              บาท
+              <button
+                class="small-button edit-button"
+                onclick="editProduct('${product.id}')"
+              >
+                แก้ไข
+              </button>
 
-              · สต็อก:
-              ${product.stock}
 
-              · ${statusText}
+              <button
+                class="small-button delete-button"
+                onclick="deleteProduct('${product.id}')"
+              >
+                ลบ
+              </button>
 
             </div>
 
           </div>
+        `;
 
+      }
+    ).join("");
 
-          <div class="item-actions">
-
-            <button
-              class="small-button edit-button"
-              onclick="editProduct('${product.id}')"
-            >
-              แก้ไข
-            </button>
-
-            <button
-              class="small-button delete-button"
-              onclick="deleteProduct('${product.id}')"
-            >
-              ลบ
-            </button>
-
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
 }
 
 
 // ========================================
-// PRODUCT MODAL
+// OPEN PRODUCT MODAL
 // ========================================
 
-function openProductModal(product = null) {
+function openProductModal(
+  product = null
+) {
 
   productModal.classList.remove(
     "hidden"
@@ -1145,7 +1641,7 @@ function openProductModal(product = null) {
     document.getElementById(
       "productStock"
     ).value =
-      product.stock || 0;
+      product.stock ?? 0;
 
 
     document.getElementById(
@@ -1163,12 +1659,14 @@ function openProductModal(product = null) {
     document.getElementById(
       "productStatus"
     ).value =
-      product.status || "available";
+      product.status ||
+      "available";
 
 
   } else {
 
     productForm.reset();
+
 
     document.getElementById(
       "productModalTitle"
@@ -1178,7 +1676,8 @@ function openProductModal(product = null) {
 
     document.getElementById(
       "productStock"
-    ).value = 1;
+    ).value =
+      1;
 
 
     document.getElementById(
@@ -1190,6 +1689,10 @@ function openProductModal(product = null) {
 
 }
 
+
+// ========================================
+// CLOSE PRODUCT MODAL
+// ========================================
 
 function closeProductModal() {
 
@@ -1215,13 +1718,18 @@ async function saveProduct(event) {
     ).value;
 
 
-  const imageFile =
+  const imageInput =
     document.getElementById(
       "productImage"
-    ).files[0];
+    );
 
 
-  let imageUrl = null;
+  const imageFile =
+    imageInput?.files?.[0];
+
+
+  let imageUrl =
+    null;
 
 
   try {
@@ -1239,21 +1747,30 @@ async function saveProduct(event) {
 
         supabaseClient
           .from("products")
-          .select("image_url")
-          .eq("id", id)
+          .select(
+            "image_url"
+          )
+          .eq(
+            "id",
+            id
+          )
           .single(),
 
         15000
+
       );
 
 
       if (oldError) {
+
         throw oldError;
+
       }
 
 
       imageUrl =
-        oldProduct?.image_url || null;
+        oldProduct?.image_url ||
+        null;
 
     }
 
@@ -1264,20 +1781,26 @@ async function saveProduct(event) {
 
     if (imageFile) {
 
-      const fileExtension =
+      const extension =
         imageFile.name
           .split(".")
-          .pop();
+          .pop()
+          .toLowerCase();
 
 
       const fileName =
-        `${Date.now()}-${Math.random()
+        Date.now() +
+        "-" +
+        Math.random()
           .toString(36)
-          .substring(2)}.${fileExtension}`;
+          .substring(2) +
+        "." +
+        extension;
 
 
       const filePath =
-        `products/${fileName}`;
+        "products/" +
+        fileName;
 
 
       const {
@@ -1286,7 +1809,9 @@ async function saveProduct(event) {
 
         supabaseClient
           .storage
-          .from("store-assets")
+          .from(
+            "store-assets"
+          )
           .upload(
             filePath,
             imageFile,
@@ -1298,11 +1823,14 @@ async function saveProduct(event) {
           ),
 
         30000
+
       );
 
 
       if (uploadError) {
+
         throw uploadError;
+
       }
 
 
@@ -1311,7 +1839,9 @@ async function saveProduct(event) {
       } =
         supabaseClient
           .storage
-          .from("store-assets")
+          .from(
+            "store-assets"
+          )
           .getPublicUrl(
             filePath
           );
@@ -1319,6 +1849,7 @@ async function saveProduct(event) {
 
       imageUrl =
         publicData.publicUrl;
+
     }
 
 
@@ -1392,11 +1923,18 @@ async function saveProduct(event) {
 
           supabaseClient
             .from("products")
-            .update(payload)
-            .eq("id", id),
+            .update(
+              payload
+            )
+            .eq(
+              "id",
+              id
+            ),
 
           15000
+
         );
+
 
     } else {
 
@@ -1405,9 +1943,12 @@ async function saveProduct(event) {
 
           supabaseClient
             .from("products")
-            .insert(payload),
+            .insert(
+              payload
+            ),
 
           15000
+
         );
 
     }
@@ -1416,16 +1957,28 @@ async function saveProduct(event) {
     if (result.error) {
 
       throw result.error;
+
     }
 
 
     closeProductModal();
 
+
     await loadProducts();
+
 
     setAdminStatus(
       "บันทึกสินค้าเรียบร้อย"
     );
+
+
+    // ล้าง input รูป
+    if (imageInput) {
+
+      imageInput.value =
+        "";
+
+    }
 
 
   } catch (error) {
@@ -1462,19 +2015,28 @@ async function editProduct(id) {
       supabaseClient
         .from("products")
         .select("*")
-        .eq("id", id)
+        .eq(
+          "id",
+          id
+        )
         .single(),
 
       15000
+
     );
 
 
     if (error) {
+
       throw error;
+
     }
 
 
-    openProductModal(data);
+    openProductModal(
+      data
+    );
+
 
   } catch (error) {
 
@@ -1501,7 +2063,9 @@ async function deleteProduct(id) {
 
 
   if (!confirmDelete) {
+
     return;
+
   }
 
 
@@ -1514,14 +2078,20 @@ async function deleteProduct(id) {
       supabaseClient
         .from("products")
         .delete()
-        .eq("id", id),
+        .eq(
+          "id",
+          id
+        ),
 
       15000
+
     );
 
 
     if (error) {
+
       throw error;
+
     }
 
 
@@ -1531,6 +2101,7 @@ async function deleteProduct(id) {
     setAdminStatus(
       "ลบสินค้าเรียบร้อย"
     );
+
 
   } catch (error) {
 
@@ -1548,41 +2119,60 @@ async function deleteProduct(id) {
 // SHOP SETTINGS
 // ========================================
 
-document
-  .getElementById("saveShopButton")
-  ?.addEventListener(
+const saveShopButton =
+  document.getElementById(
+    "saveShopButton"
+  );
+
+
+if (saveShopButton) {
+
+  saveShopButton.addEventListener(
     "click",
     () => {
 
-      localStorage.setItem(
-        "ASIRASHOP_NAME",
+      const shopName =
         document.getElementById(
           "shopName"
-        ).value
+        );
+
+      const shopTagline =
+        document.getElementById(
+          "shopTagline"
+        );
+
+      const shopLine =
+        document.getElementById(
+          "shopLine"
+        );
+
+      const shopInstagram =
+        document.getElementById(
+          "shopInstagram"
+        );
+
+
+      localStorage.setItem(
+        "ASIRASHOP_NAME",
+        shopName?.value || ""
       );
 
 
       localStorage.setItem(
         "ASIRASHOP_TAGLINE",
-        document.getElementById(
-          "shopTagline"
-        ).value
+        shopTagline?.value || ""
       );
 
 
       localStorage.setItem(
         "ASIRASHOP_LINE",
-        document.getElementById(
-          "shopLine"
-        ).value
+        shopLine?.value || ""
       );
 
 
       localStorage.setItem(
         "ASIRASHOP_INSTAGRAM",
-        document.getElementById(
-          "shopInstagram"
-        ).value
+        shopInstagram?.value || ""
       );
 
 
@@ -1592,6 +2182,8 @@ document
 
     }
   );
+
+}
 
 
 // ========================================
@@ -1612,18 +2204,28 @@ logoutButton.addEventListener(
 
 addGameButton.addEventListener(
   "click",
-  () => openGameModal()
+  () => {
+
+    openGameModal();
+
+  }
 );
 
 
 addProductButton.addEventListener(
   "click",
-  () => openProductModal()
+  () => {
+
+    openProductModal();
+
+  }
 );
 
 
 document
-  .getElementById("closeGameModal")
+  .getElementById(
+    "closeGameModal"
+  )
   .addEventListener(
     "click",
     closeGameModal
@@ -1631,7 +2233,9 @@ document
 
 
 document
-  .getElementById("cancelGameButton")
+  .getElementById(
+    "cancelGameButton"
+  )
   .addEventListener(
     "click",
     closeGameModal
@@ -1639,7 +2243,9 @@ document
 
 
 document
-  .getElementById("closeProductModal")
+  .getElementById(
+    "closeProductModal"
+  )
   .addEventListener(
     "click",
     closeProductModal
@@ -1647,7 +2253,9 @@ document
 
 
 document
-  .getElementById("cancelProductButton")
+  .getElementById(
+    "cancelProductButton"
+  )
   .addEventListener(
     "click",
     closeProductModal
@@ -1667,64 +2275,162 @@ productForm.addEventListener(
 
 
 // ========================================
+// SUPABASE AUTH STATE
+// ========================================
+
+supabaseClient.auth.onAuthStateChange(
+  (event, session) => {
+
+    console.log(
+      "AUTH EVENT:",
+      event
+    );
+
+
+    console.log(
+      "AUTH SESSION:",
+      !!session
+    );
+
+
+    // ไม่ทำอะไรทันทีตอน INITIAL_SESSION
+    // เพราะ startAdmin() จะเป็นคนตรวจครั้งแรก
+
+    if (
+      event === "SIGNED_OUT"
+    ) {
+
+      showLoginPage();
+
+      clearLoginMessage();
+
+    }
+
+  }
+);
+
+
+// ========================================
 // START
 // ========================================
 
 (async function startAdmin() {
 
   console.log(
+    "================================"
+  );
+
+  console.log(
     "ASIRASHOP ADMIN START"
   );
 
+  console.log(
+    "================================"
+  );
 
-  if (!checkSupabaseConnection()) {
+
+  // เริ่มต้นให้หน้า Login แสดงก่อน
+  showLoginPage();
+
+
+  if (
+    !checkSupabaseConnection()
+  ) {
+
     return;
+
   }
 
 
   try {
+
+    console.log(
+      "กำลังตรวจสอบ Session..."
+    );
+
 
     const {
       data,
       error
     } = await withTimeout(
 
-      supabaseClient.auth.getSession(),
+      supabaseClient.auth
+        .getSession(),
 
       15000
+
     );
 
 
     if (error) {
 
       console.error(
-        "SESSION ERROR:",
+        "INITIAL SESSION ERROR:",
         error
       );
 
+
       showLoginPage();
+
+
+      showLoginMessage(
+        "ตรวจสอบการเข้าสู่ระบบไม่สำเร็จ: " +
+        error.message,
+        "error"
+      );
+
 
       return;
+
+    }
+
+
+    console.log(
+      "INITIAL SESSION:",
+      data.session
+    );
+
+
+    // ------------------------------------
+    // HAS SESSION
+    // ------------------------------------
+
+    if (
+      data.session
+    ) {
+
+      console.log(
+        "พบ Session เดิม"
+      );
+
+
+      const isAdmin =
+        await checkAdmin();
+
+
+      if (!isAdmin) {
+
+        showLoginPage();
+
+      }
+
+
+      return;
+
     }
 
 
-    if (data.session) {
+    // ------------------------------------
+    // NO SESSION
+    // ------------------------------------
 
-      console.log(
-        "Existing session found"
-      );
+    console.log(
+      "ไม่มี Session เดิม"
+    );
 
-      await checkAdmin();
 
-    } else {
+    showLoginPage();
 
-      console.log(
-        "No existing session"
-      );
-
-      showLoginPage();
-
-    }
 
   } catch (error) {
 
@@ -1734,9 +2440,16 @@ productForm.addEventListener(
     );
 
 
+    showLoginPage();
+
+
     showLoginMessage(
       "เชื่อมต่อ Supabase ไม่สำเร็จ: " +
-      error.message
+      (
+        error.message ||
+        "ไม่ทราบสาเหตุ"
+      ),
+      "error"
     );
 
   }
