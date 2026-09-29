@@ -1,718 +1,730 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-
   <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
   >
 
   <title>ASIRASHOP Admin</title>
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans Thai", sans-serif;
+      background: #0b0b0f;
+      color: white;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .card {
+      background: #15151c;
+      border: 1px solid #292933;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    .logo {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .sub {
+      color: #9999a5;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #cfcfd8;
+      font-size: 14px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      background: #0e0e13;
+      border: 1px solid #30303a;
+      color: white;
+      border-radius: 12px;
+      padding: 13px;
+      outline: none;
+      margin-bottom: 15px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #7777ff;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 17px;
+      font-weight: 700;
+      background: #ffffff;
+      color: #111;
+    }
+
+    .btn:hover {
+      opacity: .9;
+    }
+
+    .btn-dark {
+      background: #282832;
+      color: white;
+    }
+
+    .btn-danger {
+      background: #c93445;
+      color: white;
+    }
+
+    .btn-success {
+      background: #23945b;
+      color: white;
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .message {
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 12px;
+      display: none;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: #421820;
+      border: 1px solid #85313d;
+      color: #ffb5bd;
+    }
+
+    .message.success {
+      background: #123c29;
+      border: 1px solid #277c52;
+      color: #a8efca;
+    }
+
+    .message.info {
+      background: #18243e;
+      border: 1px solid #385a9a;
+      color: #bcd2ff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .item {
+      background: #101017;
+      border: 1px solid #292933;
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    .item-top {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .thumb {
+      width: 65px;
+      height: 65px;
+      object-fit: cover;
+      border-radius: 12px;
+      background: #22222b;
+      flex-shrink: 0;
+    }
+
+    .item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-name {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .muted {
+      color: #9999a5;
+      font-size: 13px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .actions button {
+      flex: 1;
+      min-width: 90px;
+    }
+
+    .status {
+      display: inline-block;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 20px;
+      margin-top: 5px;
+    }
+
+    .status-ok {
+      background: #153d29;
+      color: #82e7ae;
+    }
+
+    .status-off {
+      background: #3d2222;
+      color: #ff9b9b;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      overflow-y: auto;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 650px;
+      background: #17171f;
+      border: 1px solid #30303b;
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .close {
+      background: #292933;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .checkbox input {
+      width: auto;
+      margin: 0;
+    }
+
+    @media (max-width: 700px) {
+      .grid,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .page {
+        padding: 12px;
+      }
+
+      .card {
+        padding: 15px;
+      }
+    }
+  </style>
 </head>
-
 
 <body>
 
+  <!-- ================= LOGIN ================= -->
 
-  <!-- ========================================
-       LOGIN
-  ========================================= -->
+  <div id="loginPage" class="login-wrap">
+    <div class="card login-card">
 
-  <section
-    id="loginPage"
-    class="login-page"
-  >
+      <div class="logo">ASIRASHOP</div>
+      <div class="sub">Admin Panel</div>
 
-    <div class="login-box">
+      <div id="loginError" class="message"></div>
 
-      <div class="login-logo">
-        ASIRA
-      </div>
+      <label for="loginEmail">อีเมล</label>
+      <input
+        id="loginEmail"
+        type="email"
+        autocomplete="username"
+        placeholder="อีเมลแอดมิน"
+      >
 
-      <h1>
-        ASIRASHOP
-      </h1>
+      <label for="loginPassword">รหัสผ่าน</label>
+      <input
+        id="loginPassword"
+        type="password"
+        autocomplete="current-password"
+        placeholder="รหัสผ่าน"
+      >
 
-      <p class="login-subtitle">
-        ระบบจัดการร้านค้า
-      </p>
-
-
-      <form id="loginForm">
-
-        <label for="loginEmail">
-          อีเมล
-        </label>
-
-        <input
-          type="email"
-          id="loginEmail"
-          placeholder="admin@email.com"
-          autocomplete="username"
-          required
-        >
-
-
-        <label for="loginPassword">
-          รหัสผ่าน
-        </label>
-
-        <input
-          type="password"
-          id="loginPassword"
-          placeholder="รหัสผ่าน"
-          autocomplete="current-password"
-          required
-        >
-
-
-        <button
-          type="submit"
-          id="loginButton"
-          class="primary-button"
-        >
-          เข้าสู่ระบบ
-        </button>
-
-      </form>
-
+      <!-- สำคัญ: ไม่ใช้ form และไม่ใช้ submit -->
+      <button
+        type="button"
+        id="loginButton"
+        class="btn btn-full"
+        onclick="window.loginAdmin()"
+      >
+        เข้าสู่ระบบ
+      </button>
 
       <div
-        id="loginMessage"
-        class="message"
+        id="loginLoading"
+        class="muted"
+        style="text-align:center;margin-top:12px;"
       ></div>
 
     </div>
-
-  </section>
-
+  </div>
 
 
-  <!-- ========================================
-       ADMIN
-  ========================================= -->
+  <!-- ================= ADMIN ================= -->
 
-  <section
-    id="adminPage"
-    class="admin-page hidden"
-  >
+  <div id="adminPage" class="page hidden">
 
+    <div class="container">
 
-    <!-- HEADER -->
-
-    <header class="admin-header">
-
-      <div>
-
-        <div class="admin-brand">
-          ASIRASHOP
-        </div>
-
-        <div class="admin-title">
-          Admin Panel
-        </div>
-
-      </div>
-
-
-      <button
-        id="logoutButton"
-        class="logout-button"
-      >
-        ออกจากระบบ
-      </button>
-
-    </header>
-
-
-
-    <!-- STATUS -->
-
-    <div
-      id="adminStatus"
-      class="admin-status"
-    >
-      กำลังโหลด...
-    </div>
-
-
-
-    <!-- ========================================
-         SHOP SETTINGS
-    ========================================= -->
-
-    <section class="admin-card">
-
-      <div class="card-header">
-
+      <div class="topbar">
         <div>
-
-          <h2>
-            ตั้งค่าร้าน
-          </h2>
-
-          <p>
-            ตั้งค่าข้อมูลพื้นฐานของ ASIRASHOP
-          </p>
-
+          <div class="logo">ASIRASHOP</div>
+          <div class="muted">ระบบจัดการร้านค้า</div>
         </div>
-
-      </div>
-
-
-      <div class="form-grid">
-
-
-        <div class="form-group">
-
-          <label>
-            ชื่อร้าน
-          </label>
-
-          <input
-            type="text"
-            id="shopName"
-            value="ASIRASHOP"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            คำโปรย
-          </label>
-
-          <input
-            type="text"
-            id="shopTagline"
-            placeholder="ร้านเติมเกม / ขายไอดี"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            LINE
-          </label>
-
-          <input
-            type="text"
-            id="shopLine"
-            value="@shtt01"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            Instagram
-          </label>
-
-          <input
-            type="text"
-            id="shopInstagram"
-            value="soulswoon._"
-          >
-
-        </div>
-
-      </div>
-
-
-      <button
-        id="saveShopButton"
-        class="primary-button"
-      >
-        บันทึกตั้งค่าร้าน
-      </button>
-
-    </section>
-
-
-
-    <!-- ========================================
-         GAMES
-    ========================================= -->
-
-    <section class="admin-card">
-
-      <div class="card-header">
-
-        <div>
-
-          <h2>
-            จัดการเกม
-          </h2>
-
-          <p>
-            เพิ่ม / แก้ไข / ลบ / ซ่อนเกม
-          </p>
-
-        </div>
-
-
-        <button
-          id="addGameButton"
-          class="primary-button"
-        >
-          + เพิ่มเกม
-        </button>
-
-      </div>
-
-
-      <div
-        id="gamesList"
-        class="items-list"
-      ></div>
-
-    </section>
-
-
-
-    <!-- ========================================
-         PRODUCTS
-    ========================================= -->
-
-    <section class="admin-card">
-
-      <div class="card-header">
-
-        <div>
-
-          <h2>
-            จัดการสินค้า
-          </h2>
-
-          <p>
-            เพิ่มสินค้า ตั้งราคา สต็อก และสถานะ
-          </p>
-
-        </div>
-
-
-        <button
-          id="addProductButton"
-          class="primary-button"
-        >
-          + เพิ่มสินค้า
-        </button>
-
-      </div>
-
-
-      <div
-        id="productsList"
-        class="items-list"
-      ></div>
-
-    </section>
-
-  </section>
-
-
-
-  <!-- ========================================
-       GAME MODAL
-  ========================================= -->
-
-  <div
-    id="gameModal"
-    class="modal hidden"
-  >
-
-    <div class="modal-box">
-
-
-      <div class="modal-header">
-
-        <h2 id="gameModalTitle">
-          เพิ่มเกม
-        </h2>
-
 
         <button
           type="button"
-          id="closeGameModal"
-          class="close-button"
+          class="btn btn-danger"
+          onclick="window.logoutAdmin()"
         >
-          ×
+          ออกจากระบบ
+        </button>
+      </div>
+
+
+      <div id="adminMessage" class="message"></div>
+
+
+      <!-- SHOP SETTINGS -->
+
+      <div class="card">
+
+        <div class="section-title">
+          <h2>ตั้งค่าร้าน</h2>
+        </div>
+
+        <div class="grid">
+
+          <div>
+            <label>ชื่อร้าน</label>
+            <input id="shopName" value="ASIRASHOP">
+          </div>
+
+          <div>
+            <label>LINE</label>
+            <input id="shopLine" value="@shtt01">
+          </div>
+
+          <div>
+            <label>Instagram</label>
+            <input id="shopInstagram" value="https://www.instagram.com/soulswoon._/">
+          </div>
+
+          <div>
+            <label>Logo URL</label>
+            <input id="shopLogo" placeholder="URL รูปโลโก้">
+          </div>
+
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="window.saveShopSettings()"
+        >
+          บันทึกตั้งค่าร้าน
         </button>
 
       </div>
 
 
+      <!-- GAMES -->
 
-      <form id="gameForm">
+      <div class="card">
 
-        <input
-          type="hidden"
-          id="gameId"
-        >
+        <div class="section-title">
 
-
-        <div class="form-group">
-
-          <label>
-            ชื่อเกม
-          </label>
-
-          <input
-            type="text"
-            id="gameName"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            Slug
-          </label>
-
-          <input
-            type="text"
-            id="gameSlug"
-            placeholder="efootball"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            รายละเอียดเกม
-          </label>
-
-          <textarea
-            id="gameDescription"
-            rows="4"
-          ></textarea>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            URL ไอคอนเกม
-          </label>
-
-          <input
-            type="url"
-            id="gameIconUrl"
-            placeholder="https://..."
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            URL แบนเนอร์เกม
-          </label>
-
-          <input
-            type="url"
-            id="gameBannerUrl"
-            placeholder="https://..."
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            ลำดับ
-          </label>
-
-          <input
-            type="number"
-            id="gameSortOrder"
-            value="0"
-          >
-
-        </div>
-
-
-        <label class="checkbox-row">
-
-          <input
-            type="checkbox"
-            id="gameActive"
-            checked
-          >
-
-          <span>
-            แสดงเกมบนร้าน
-          </span>
-
-        </label>
-
-
-        <div class="modal-actions">
+          <h2>เกม</h2>
 
           <button
             type="button"
-            id="cancelGameButton"
-            class="secondary-button"
+            class="btn"
+            onclick="window.openGameModal()"
           >
-            ยกเลิก
-          </button>
-
-
-          <button
-            type="submit"
-            class="primary-button"
-          >
-            บันทึกเกม
+            + เพิ่มเกม
           </button>
 
         </div>
 
-      </form>
+        <div id="gamesList">
+          กำลังโหลด...
+        </div>
+
+      </div>
+
+
+      <!-- PRODUCTS -->
+
+      <div class="card">
+
+        <div class="section-title">
+
+          <h2>สินค้า</h2>
+
+          <button
+            type="button"
+            class="btn"
+            onclick="window.openProductModal()"
+          >
+            + เพิ่มสินค้า
+          </button>
+
+        </div>
+
+        <div id="productsList">
+          กำลังโหลด...
+        </div>
+
+      </div>
 
     </div>
 
   </div>
 
 
+  <!-- ================= GAME MODAL ================= -->
 
-  <!-- ========================================
-       PRODUCT MODAL
-  ========================================= -->
-
-  <div
-    id="productModal"
-    class="modal hidden"
-  >
+  <div id="gameModal" class="modal hidden">
 
     <div class="modal-box">
 
+      <div class="modal-head">
 
-      <div class="modal-header">
-
-        <h2 id="productModalTitle">
-          เพิ่มสินค้า
-        </h2>
-
+        <h2 id="gameModalTitle">เพิ่มเกม</h2>
 
         <button
           type="button"
-          id="closeProductModal"
-          class="close-button"
+          class="close"
+          onclick="window.closeGameModal()"
         >
-          ×
+          ปิด
         </button>
 
       </div>
 
+      <input id="gameId" type="hidden">
 
+      <label>ชื่อเกม</label>
+      <input id="gameName" placeholder="eFootball Mobile">
 
-      <form id="productForm">
+      <label>Slug</label>
+      <input id="gameSlug" placeholder="efootball">
+
+      <label>คำอธิบาย</label>
+      <textarea
+        id="gameDescription"
+        placeholder="รายละเอียดเกม"
+      ></textarea>
+
+      <label>ไอคอนเกม URL</label>
+      <input
+        id="gameIconUrl"
+        placeholder="URL รูปไอคอน"
+      >
+
+      <label>Banner URL</label>
+      <input
+        id="gameBannerUrl"
+        placeholder="URL รูป Banner"
+      >
+
+      <label>ลำดับ</label>
+      <input
+        id="gameSortOrder"
+        type="number"
+        value="0"
+      >
+
+      <div class="checkbox">
 
         <input
-          type="hidden"
-          id="productId"
+          id="gameActive"
+          type="checkbox"
+          checked
         >
 
+        <label
+          for="gameActive"
+          style="margin:0;"
+        >
+          แสดงเกมบนหน้าเว็บ
+        </label>
 
-        <div class="form-group">
+      </div>
 
-          <label>
-            เกม
-          </label>
+      <div class="actions">
 
-          <select
-            id="productGame"
-            required
-          ></select>
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="window.saveGame()"
+        >
+          บันทึก
+        </button>
 
-        </div>
+        <button
+          type="button"
+          class="btn btn-dark"
+          onclick="window.closeGameModal()"
+        >
+          ยกเลิก
+        </button>
 
-
-        <div class="form-group">
-
-          <label>
-            ชื่อสินค้า
-          </label>
-
-          <input
-            type="text"
-            id="productName"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            ราคา
-          </label>
-
-          <input
-            type="number"
-            id="productPrice"
-            min="0"
-            step="0.01"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            จำนวนสต็อก
-          </label>
-
-          <input
-            type="number"
-            id="productStock"
-            min="0"
-            value="1"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            รายละเอียด
-          </label>
-
-          <textarea
-            id="productDescription"
-            rows="4"
-          ></textarea>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            รูปสินค้า
-          </label>
-
-          <input
-            type="file"
-            id="productImage"
-            accept="image/*"
-          >
-
-          <small>
-            เลือกรูปจาก iPad ได้
-          </small>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            ลำดับสินค้า
-          </label>
-
-          <input
-            type="number"
-            id="productSortOrder"
-            value="0"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label>
-            สถานะ
-          </label>
-
-          <select id="productStatus">
-
-            <option value="available">
-              พร้อมขาย
-            </option>
-
-            <option value="sold_out">
-              สินค้าหมด
-            </option>
-
-            <option value="hidden">
-              ซ่อนสินค้า
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="modal-actions">
-
-          <button
-            type="button"
-            id="cancelProductButton"
-            class="secondary-button"
-          >
-            ยกเลิก
-          </button>
-
-
-          <button
-            type="submit"
-            class="primary-button"
-          >
-            บันทึกสินค้า
-          </button>
-
-        </div>
-
-      </form>
+      </div>
 
     </div>
 
   </div>
 
 
+  <!-- ================= PRODUCT MODAL ================= -->
 
-  <!-- ========================================
-       SCRIPTS
-  ========================================= -->
+  <div id="productModal" class="modal hidden">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <div class="modal-box">
 
-  <script src="supabase.js"></script>
+      <div class="modal-head">
 
-  <script src="admin.js"></script>
+        <h2 id="productModalTitle">เพิ่มสินค้า</h2>
 
+        <button
+          type="button"
+          class="close"
+          onclick="window.closeProductModal()"
+        >
+          ปิด
+        </button>
+
+      </div>
+
+      <input id="productId" type="hidden">
+
+      <label>เกม</label>
+      <select id="productGame"></select>
+
+      <label>ชื่อสินค้า</label>
+      <input
+        id="productName"
+        placeholder="เช่น 1000 Coins"
+      >
+
+      <label>ราคา</label>
+      <input
+        id="productPrice"
+        type="number"
+        step="0.01"
+        min="0"
+        placeholder="100"
+      >
+
+      <label>จำนวน Stock</label>
+      <input
+        id="productStock"
+        type="number"
+        min="0"
+        value="0"
+      >
+
+      <label>รายละเอียด</label>
+      <textarea
+        id="productDescription"
+        placeholder="รายละเอียดสินค้า"
+      ></textarea>
+
+      <label>รูปสินค้า URL</label>
+      <input
+        id="productImage"
+        placeholder="URL รูปสินค้า"
+      >
+
+      <label>ลำดับ</label>
+      <input
+        id="productSortOrder"
+        type="number"
+        value="0"
+      >
+
+      <label>สถานะ</label>
+      <select id="productStatus">
+
+        <option value="available">
+          พร้อมขาย
+        </option>
+
+        <option value="sold_out">
+          สินค้าหมด
+        </option>
+
+        <option value="hidden">
+          ซ่อน
+        </option>
+
+      </select>
+
+      <div class="actions">
+
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="window.saveProduct()"
+        >
+          บันทึก
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-dark"
+          onclick="window.closeProductModal()"
+        >
+          ยกเลิก
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- SUPABASE -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <script src="supabase.js?v=20260929-3"></script>
+
+  <script src="admin.js?v=20260929-3"></script>
 
 </body>
-
 </html>
