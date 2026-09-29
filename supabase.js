@@ -1,20 +1,14 @@
-// ========================================
-// ASIRASHOP SUPABASE
-// ========================================
-
 const SUPABASE_URL =
   "https://izlwohwttnqyhqaceswu.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_Lbhr1nsVHHnLtHNS642UgQ_cTrnEtm-";
 
+if (!window.supabase) {
+  throw new Error("ไม่พบ Supabase SDK");
+}
 
 const { createClient } = window.supabase;
-
-
-// ========================================
-// CREATE CLIENT
-// ========================================
 
 const supabaseClient = createClient(
   SUPABASE_URL,
@@ -30,13 +24,6 @@ const supabaseClient = createClient(
   }
 );
 
-
-// ========================================
-// GLOBAL
-// ========================================
-
 window.supabaseClient = supabaseClient;
 
-console.log(
-  "ASIRASHOP Supabase connected"
-);
+console.log("ASIRASHOP Supabase connected");
