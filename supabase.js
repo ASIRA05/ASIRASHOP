@@ -1,6 +1,6 @@
 const SUPABASE_URL = "https://izlwohwttnqyhaqceswu.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY = "ใส่ Publishable key ที่โซลคัดลอกมาไว้ตรงนี้";
+const SUPABASE_PUBLISHABLE_KEY = "SUPABASE_PUBLISHABLE_KEY";
 
 const { createClient } = window.supabase;
 
@@ -11,7 +11,7 @@ const supabaseClient = createClient(
 
 window.supabaseClient = supabaseClient;const SUPABASE_URL = "https://izlwohwttnqyhaqceswu.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY = "ใส่ Publishable key ที่โซลคัดลอกมาไว้ตรงนี้";
+const SUPABASE_PUBLISHABLE_KEY = "SUPABASE_PUBLISHABLE_KEY";
 
 const { createClient } = window.supabase;
 
