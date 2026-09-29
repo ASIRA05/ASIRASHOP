@@ -336,14 +336,10 @@ async function loginAdmin() {
 
 
   if (error) {
-
-    showLoginMessage(
-      "เข้าสู่ระบบไม่สำเร็จ: " +
-      error.message
-    );
-
-    return;
-  }
+  console.error("LOGIN ERROR:", error);
+  showStatus("เข้าสู่ระบบไม่สำเร็จ: " + error.message);
+  return;
+}
 
 
   location.reload();
