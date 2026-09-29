@@ -350,7 +350,9 @@
       <div id="loginError" class="message"></div>
 
       <form id="loginForm" onsubmit="event.preventDefault(); window.loginAdmin(event); return false;">
+
         <label for="loginEmail">อีเมล</label>
+
         <input
           id="loginEmail"
           type="email"
@@ -360,6 +362,7 @@
         >
 
         <label for="loginPassword">รหัสผ่าน</label>
+
         <input
           id="loginPassword"
           type="password"
@@ -375,6 +378,7 @@
         >
           เข้าสู่ระบบ
         </button>
+
       </form>
 
       <div
@@ -394,6 +398,7 @@
     <div class="container">
 
       <div class="topbar">
+
         <div>
           <div class="logo">ASIRASHOP</div>
           <div class="muted">ระบบจัดการร้านค้า</div>
@@ -406,6 +411,7 @@
         >
           ออกจากระบบ
         </button>
+
       </div>
 
 
@@ -434,12 +440,18 @@
 
           <div>
             <label>Instagram</label>
-            <input id="shopInstagram" value="https://www.instagram.com/soulswoon._/">
+            <input
+              id="shopInstagram"
+              value="https://www.instagram.com/soulswoon._/"
+            >
           </div>
 
           <div>
             <label>Logo URL</label>
-            <input id="shopLogo" placeholder="URL รูปโลโก้">
+            <input
+              id="shopLogo"
+              placeholder="URL รูปโลโก้"
+            >
           </div>
 
         </div>
@@ -532,10 +544,16 @@
       <input id="gameId" type="hidden">
 
       <label>ชื่อเกม</label>
-      <input id="gameName" placeholder="eFootball Mobile">
+      <input
+        id="gameName"
+        placeholder="eFootball Mobile"
+      >
 
       <label>Slug</label>
-      <input id="gameSlug" placeholder="efootball">
+      <input
+        id="gameSlug"
+        placeholder="efootball"
+      >
 
       <label>คำอธิบาย</label>
       <textarea
@@ -672,6 +690,7 @@
       >
 
       <label>สถานะ</label>
+
       <select id="productStatus">
 
         <option value="available">
@@ -713,11 +732,13 @@
   </div>
 
 
-  <!-- SUPABASE -->
+  <!-- ================= SUPABASE ================= -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js?v=20260929-4"></script>
-  <script src="admin.js?v=20260929-4"></script>
+
+  <!-- Cache busting: 20260929-5 -->
+  <script src="supabase.js?v=20260929-5"></script>
+  <script src="admin.js?v=20260929-5"></script>
 
 </body>
 </html>
