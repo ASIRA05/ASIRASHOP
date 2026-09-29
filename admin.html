@@ -2,12 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>ASIRASHOP Admin</title>
 
   <style>
@@ -354,31 +349,33 @@
 
       <div id="loginError" class="message"></div>
 
-      <label for="loginEmail">อีเมล</label>
-      <input
-        id="loginEmail"
-        type="email"
-        autocomplete="username"
-        placeholder="อีเมลแอดมิน"
-      >
+      <form id="loginForm" onsubmit="event.preventDefault(); window.loginAdmin(event); return false;">
+        <label for="loginEmail">อีเมล</label>
+        <input
+          id="loginEmail"
+          type="email"
+          autocomplete="username"
+          placeholder="อีเมลแอดมิน"
+          required
+        >
 
-      <label for="loginPassword">รหัสผ่าน</label>
-      <input
-        id="loginPassword"
-        type="password"
-        autocomplete="current-password"
-        placeholder="รหัสผ่าน"
-      >
+        <label for="loginPassword">รหัสผ่าน</label>
+        <input
+          id="loginPassword"
+          type="password"
+          autocomplete="current-password"
+          placeholder="รหัสผ่าน"
+          required
+        >
 
-      <!-- สำคัญ: ไม่ใช้ form และไม่ใช้ submit -->
-      <button
-        type="button"
-        id="loginButton"
-        class="btn btn-full"
-        onclick="window.loginAdmin()"
-      >
-        เข้าสู่ระบบ
-      </button>
+        <button
+          type="submit"
+          id="loginButton"
+          class="btn btn-full"
+        >
+          เข้าสู่ระบบ
+        </button>
+      </form>
 
       <div
         id="loginLoading"
@@ -718,13 +715,9 @@
 
   <!-- SUPABASE -->
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-  ></script>
-
-  <script src="supabase.js?v=20260929-3"></script>
-
-  <script src="admin.js?v=20260929-3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js?v=20260929-4"></script>
+  <script src="admin.js?v=20260929-4"></script>
 
 </body>
 </html>
