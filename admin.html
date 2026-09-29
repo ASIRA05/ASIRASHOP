@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -10,16 +12,25 @@
 
   <title>ASIRASHOP Admin</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
 </head>
 
+
 <body>
+
 
   <!-- ========================================
        LOGIN
   ========================================= -->
 
-  <section id="loginPage" class="login-page">
+  <section
+    id="loginPage"
+    class="login-page"
+  >
 
     <div class="login-box">
 
@@ -27,15 +38,18 @@
         ASIRA
       </div>
 
-      <h1>ASIRASHOP</h1>
+      <h1>
+        ASIRASHOP
+      </h1>
 
       <p class="login-subtitle">
         ระบบจัดการร้านค้า
       </p>
 
+
       <form id="loginForm">
 
-        <label>
+        <label for="loginEmail">
           อีเมล
         </label>
 
@@ -43,11 +57,12 @@
           type="email"
           id="loginEmail"
           placeholder="admin@email.com"
-          autocomplete="email"
+          autocomplete="username"
           required
         >
 
-        <label>
+
+        <label for="loginPassword">
           รหัสผ่าน
         </label>
 
@@ -59,6 +74,7 @@
           required
         >
 
+
         <button
           type="submit"
           id="loginButton"
@@ -68,6 +84,7 @@
         </button>
 
       </form>
+
 
       <div
         id="loginMessage"
@@ -79,11 +96,16 @@
   </section>
 
 
+
   <!-- ========================================
        ADMIN
   ========================================= -->
 
-  <section id="adminPage" class="admin-page hidden">
+  <section
+    id="adminPage"
+    class="admin-page hidden"
+  >
+
 
     <!-- HEADER -->
 
@@ -101,6 +123,7 @@
 
       </div>
 
+
       <button
         id="logoutButton"
         class="logout-button"
@@ -109,6 +132,7 @@
       </button>
 
     </header>
+
 
 
     <!-- STATUS -->
@@ -121,6 +145,7 @@
     </div>
 
 
+
     <!-- ========================================
          SHOP SETTINGS
     ========================================= -->
@@ -131,7 +156,9 @@
 
         <div>
 
-          <h2>ตั้งค่าร้าน</h2>
+          <h2>
+            ตั้งค่าร้าน
+          </h2>
 
           <p>
             ตั้งค่าข้อมูลพื้นฐานของ ASIRASHOP
@@ -143,6 +170,7 @@
 
 
       <div class="form-grid">
+
 
         <div class="form-group">
 
@@ -216,6 +244,7 @@
     </section>
 
 
+
     <!-- ========================================
          GAMES
     ========================================= -->
@@ -226,13 +255,16 @@
 
         <div>
 
-          <h2>จัดการเกม</h2>
+          <h2>
+            จัดการเกม
+          </h2>
 
           <p>
             เพิ่ม / แก้ไข / ลบ / ซ่อนเกม
           </p>
 
         </div>
+
 
         <button
           id="addGameButton"
@@ -252,6 +284,7 @@
     </section>
 
 
+
     <!-- ========================================
          PRODUCTS
     ========================================= -->
@@ -262,13 +295,16 @@
 
         <div>
 
-          <h2>จัดการสินค้า</h2>
+          <h2>
+            จัดการสินค้า
+          </h2>
 
           <p>
             เพิ่มสินค้า ตั้งราคา สต็อก และสถานะ
           </p>
 
         </div>
+
 
         <button
           id="addProductButton"
@@ -290,6 +326,7 @@
   </section>
 
 
+
   <!-- ========================================
        GAME MODAL
   ========================================= -->
@@ -301,13 +338,16 @@
 
     <div class="modal-box">
 
+
       <div class="modal-header">
 
         <h2 id="gameModalTitle">
           เพิ่มเกม
         </h2>
 
+
         <button
+          type="button"
           id="closeGameModal"
           class="close-button"
         >
@@ -315,6 +355,7 @@
         </button>
 
       </div>
+
 
 
       <form id="gameForm">
@@ -440,6 +481,7 @@
             ยกเลิก
           </button>
 
+
           <button
             type="submit"
             class="primary-button"
@@ -456,6 +498,7 @@
   </div>
 
 
+
   <!-- ========================================
        PRODUCT MODAL
   ========================================= -->
@@ -467,13 +510,16 @@
 
     <div class="modal-box">
 
+
       <div class="modal-header">
 
         <h2 id="productModalTitle">
           เพิ่มสินค้า
         </h2>
 
+
         <button
+          type="button"
           id="closeProductModal"
           class="close-button"
         >
@@ -481,6 +527,7 @@
         </button>
 
       </div>
+
 
 
       <form id="productForm">
@@ -637,6 +684,7 @@
             ยกเลิก
           </button>
 
+
           <button
             type="submit"
             class="primary-button"
@@ -653,6 +701,7 @@
   </div>
 
 
+
   <!-- ========================================
        SCRIPTS
   ========================================= -->
@@ -663,5 +712,7 @@
 
   <script src="admin.js"></script>
 
+
 </body>
+
 </html>
