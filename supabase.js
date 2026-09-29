@@ -1,3 +1,4 @@
+
 const SUPABASE_URL =
   "https://izlwohwttnqyhqaceswu.supabase.co";
 
